@@ -24,6 +24,7 @@ func generate_dungeon():
 	var walker_pos = Vector3(BOX_WIDTH/2, 0, BOX_LENGTH/2).ceil()
 	var walker = Walker.new(walker_pos, BoundBox)
 	maps = walker.walk(150, 8)
+	Global.maps = maps
 	
 #	for location in maps.rooms:
 #		grid.set_cell_item(location.x, location.y, location.z, 2)
@@ -47,7 +48,7 @@ func generate_dungeon():
 	player.translate(player_pos * cell_size \
 	+ Vector3(cell_size/2.0, 5.5, cell_size/2.0))
 	$Entities.add_child(player)
-	print("player_transfor", player.translation)
+	print("player_transform", player.translation)
 	
 	var spider = Spider.instance()
 	var spider_pos = MapTools.random_items(player_room, 1).front()
@@ -55,7 +56,7 @@ func generate_dungeon():
 	spider.translate(spider_pos * 4 + Vector3.UP * 6)
 	$Entities.add_child(spider)
 
-	print("spider_transfor", spider.translation)
+#	print("spider_transfor", spider.translation)
 
 #func place_grid(gridmap, map, g_index):
 #	for location in map:

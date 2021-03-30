@@ -1,10 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Entities/Weapons/Weapon.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Entities/Player/player.gd" type="Script" id=2]
+[ext_resource path="res://Entities/Player/playerg.gd" type="Script" id=2]
 
 [sub_resource type="CapsuleShape" id=1]
-radius = 0.958246
+radius = 0.672384
 
 [sub_resource type="Animation" id=2]
 resource_name = "MeleeAttack"
@@ -36,10 +36,6 @@ tracks/1/keys = {
 
 [sub_resource type="CapsuleMesh" id=3]
 radius = 0.565
-
-[sub_resource type="CylinderShape" id=4]
-radius = 0.568821
-height = 0.567881
 
 [sub_resource type="CapsuleShape" id=5]
 radius = 0.64
@@ -78,14 +74,6 @@ anims/MeleeAttack = SubResource( 2 )
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
 mesh = SubResource( 3 )
 material/0 = null
-
-[node name="Tail" type="RayCast" parent="."]
-
-[node name="GroundArea" type="Area" parent="."]
-
-[node name="CollisionShape" type="CollisionShape" parent="GroundArea"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, 0 )
-shape = SubResource( 4 )
 
 [node name="HitBox" type="Area" parent="."]
 
