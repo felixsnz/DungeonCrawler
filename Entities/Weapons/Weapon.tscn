@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Assets/Textures/Dagger.png" type="Texture" id=1]
+
+[node name="Weapon" type="Spatial"]
+
+[node name="WeaponSprite" type="Sprite3D" parent="."]
+texture = ExtResource( 1 )
