@@ -11,6 +11,7 @@ const cell_size = 4
 var BoundBox = AABB(Vector3.ZERO, Vector3(BOX_WIDTH, BOX_HEIGHT, BOX_LENGTH))
 
 onready var grid = $GridMap
+onready var entities = $Entities
 var maps
 func _ready():
 	randomize()
@@ -53,8 +54,9 @@ func generate_dungeon():
 	var spider = Spider.instance()
 	var spider_pos = MapTools.random_items(player_room, 1).front()
 #	print("grid spider location: ", spider_pos)
-	spider.translate(spider_pos * 4 + Vector3.UP * 6)
-	$Entities.add_child(spider)
+	spider.translate(spider_pos * cell_size + \
+	Vector3(cell_size/2.0, cell_size, cell_size/2.0))
+	$Entities.call_deferred("add_child", spider)
 
 #	print("spider_transfor", spider.translation)
 
