@@ -93,23 +93,14 @@ func idle_state():
 	t = 0
 
 func move_state(delta):
-	
-	
-#	hitRay.enabled = true
-#	hitRay.cast_to = step_direction * scalar
-#	hitRay.force_raycast_update()
-#	if !hitRay.is_colliding():
 	var scalar = get_direction_scalar()
 	t += delta
 	translation = lerp(translation, initial_pos + step_direction * scalar, t)
 	if translation.is_equal_approx(initial_pos + step_direction * scalar):
+		translation = (initial_pos + step_direction * scalar).round()
 		hitRay.enabled = false
 		state = STATES.IDLE
 		can_move = true
-#	else:
-#		hitRay.enabled = false
-#		state = STATES.IDLE
-#		can_move = true
 
 func get_direction_scalar():
 	var scalar = tile_size
@@ -117,18 +108,16 @@ func get_direction_scalar():
 		scalar = sqrt(2 * pow(tile_size, 2))
 	return scalar
 
-
 func rotate_state(delta):
 	t += delta
-	rotation_degrees.y = lerp(rotation_degrees.y, initial_rot + turn_rotation, t)
+	var new_rotation = initial_rot + turn_rotation
+	rotation_degrees.y = lerp(rotation_degrees.y, new_rotation, t)
 	var angle = deg2rad(rotation_degrees.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle))* -1
 	move_inputs = get_directions(step_direction)
-	if is_equal_approx(rotation_degrees.y, initial_rot + turn_rotation):
+	if is_equal_approx(rotation_degrees.y, new_rotation):
+		rotation_degrees.y = new_rotation
+		if is_equal_approx(rotation_degrees.y, 360) or is_equal_approx(rotation_degrees.y, -360):
+			rotation_degrees.y = 0
 		state = STATES.IDLE
 		can_move = true
-
-func has_wall_infront():
-	var boolean = false
-	hitRay.enabled
-	
