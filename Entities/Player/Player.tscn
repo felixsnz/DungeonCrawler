@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Entities/Weapons/Weapon.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Entities/Player/playerg.gd" type="Script" id=2]
@@ -40,6 +40,10 @@ radius = 0.565
 [sub_resource type="CapsuleShape" id=5]
 radius = 0.64
 
+[sub_resource type="RayShape" id=6]
+margin = 1.021
+length = 2.26
+
 [node name="Player" type="KinematicBody"]
 collision_layer = 3
 collision_mask = 3
@@ -47,15 +51,19 @@ script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0, 0 )
+visible = false
 shape = SubResource( 1 )
 
 [node name="Head" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0 )
 
 [node name="Camera" type="Camera" parent="Head"]
+current = true
 
 [node name="HitRay" type="RayCast" parent="Head/Camera"]
-cast_to = Vector3( 0, 0, -5 )
+visible = false
+cast_to = Vector3( 0, 0, -4.5 )
+collide_with_areas = true
 
 [node name="WeaponPos" type="Position3D" parent="Head/Camera"]
 transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0.55, -0.25, -0.9 )
@@ -79,4 +87,20 @@ material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="HitBox"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
+visible = false
 shape = SubResource( 5 )
+
+[node name="RayCast" type="RayCast" parent="."]
+visible = false
+enabled = true
+cast_to = Vector3( 0, 0, -5 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 10.591, 0 )
+
+[node name="Raicast" type="Area" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.212, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="Raicast"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, -1.896, 0, 0, 0 )
+shape = SubResource( 6 )

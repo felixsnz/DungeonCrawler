@@ -7,6 +7,13 @@ var move_inputs = {
 	"back": Vector3.BACK
 	}
 
+const static_inps = {
+	"right": Vector3.RIGHT,
+	"left": Vector3.LEFT,
+	"forward": Vector3.FORWARD,
+	"back": Vector3.BACK
+	}
+
 var rotate_inputs = {
 	"turn_right":-45,
 	"turn_left":45
@@ -24,6 +31,10 @@ enum STATES {
 	ROTATE
 }
 
+onready var hitRay = $Head/Camera/HitRay
+onready var wallRayCast = $RayCast
+onready var rayshape = $Raicast
+
 var state = STATES.IDLE
 var t = 0
 var can_move = true
@@ -32,6 +43,7 @@ var can_move = true
 func _ready():
 	var angle = deg2rad(rotation_degrees.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle)) * -1
+	wallRayCast.cast_to = step_direction * get_direction_scalar()
 
 
 func _unhandled_input(event):
@@ -39,9 +51,16 @@ func _unhandled_input(event):
 		if event.is_action_pressed(dir_key):
 			if can_move:
 				step_direction = move_inputs[dir_key]
-				initial_pos = translation
-				state = STATES.MOVE
-				can_move = false
+				var scalar = get_direction_scalar()
+				wallRayCast.cast_to = static_inps[dir_key] * scalar
+				wallRayCast.force_raycast_update()
+				if !wallRayCast.is_colliding():
+					initial_pos = translation
+					state = STATES.MOVE
+					can_move = false
+				else:
+					can_move = true
+					state = STATES.IDLE
 
 	for rotate_key in rotate_inputs.keys():
 		if event.is_action_pressed(rotate_key):
@@ -71,31 +90,45 @@ func get_directions(forward_reference):
 	}
 
 func idle_state():
-	pass
+	t = 0
 
 func move_state(delta):
-	var scalar = tile_size
-	t = delta * 15
-	if not int(round(rotation_degrees.y / 45)) % 2 == 0:
-		scalar = sqrt(2 * pow(tile_size, 2))
+	
+	
+#	hitRay.enabled = true
+#	hitRay.cast_to = step_direction * scalar
+#	hitRay.force_raycast_update()
+#	if !hitRay.is_colliding():
+	var scalar = get_direction_scalar()
+	t += delta
 	translation = lerp(translation, initial_pos + step_direction * scalar, t)
 	if translation.is_equal_approx(initial_pos + step_direction * scalar):
+		hitRay.enabled = false
 		state = STATES.IDLE
-		print("changos move")
 		can_move = true
+#	else:
+#		hitRay.enabled = false
+#		state = STATES.IDLE
+#		can_move = true
+
+func get_direction_scalar():
+	var scalar = tile_size
+	if not int(round(rotation_degrees.y / 45)) % 2 == 0:
+		scalar = sqrt(2 * pow(tile_size, 2))
+	return scalar
 
 
 func rotate_state(delta):
-	rotation_degrees.y = lerp(rotation_degrees.y, initial_rot + turn_rotation, delta * 15)
-	
+	t += delta
+	rotation_degrees.y = lerp(rotation_degrees.y, initial_rot + turn_rotation, t)
 	var angle = deg2rad(rotation_degrees.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle))* -1
 	move_inputs = get_directions(step_direction)
-#	print("rot deg: ", rotation_degrees.y)
-#	print("final deg: ", initial_rot + turn_rotation)
 	if is_equal_approx(rotation_degrees.y, initial_rot + turn_rotation):
-#		print("changos")
 		state = STATES.IDLE
 		can_move = true
 
-
+func has_wall_infront():
+	var boolean = false
+	hitRay.enabled
+	

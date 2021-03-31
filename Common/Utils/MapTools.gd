@@ -33,13 +33,19 @@ static func sub_map(map, neighbors_per_location, dir):
 
 static func get_outline_map(rooms):
 	var walls_map = []
+	var walls_map2 = []
 	for location in rooms:
 		var neighbors = get_neighbors(location)
 		for neighbor in neighbors.values():
-			if not neighbor in walls_map and \
-			not neighbor in rooms:
+			if not neighbor in walls_map:
 				walls_map.append(neighbor)
-	return walls_map
+	for location in walls_map:
+		var neighbors = get_neighbors(location)
+		for neighbor in neighbors.values():
+			if not neighbor in walls_map2 and \
+			not neighbor in rooms:
+				walls_map2.append(neighbor)
+	return walls_map2
 		
 
 static func random_items(arr, n):
