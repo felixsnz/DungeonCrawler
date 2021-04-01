@@ -6,6 +6,7 @@
 
 [node name="DungeonGen" type="Spatial"]
 script = ExtResource( 1 )
+debuging_mode = true
 
 [node name="GridMap" type="GridMap" parent="."]
 mesh_library = ExtResource( 2 )

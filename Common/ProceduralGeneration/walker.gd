@@ -116,7 +116,7 @@ func changue_direction(futere_steps):
 	directions.erase(direction)
 	directions.shuffle()
 	direction = directions.pop_front()
-	while not bound_box.has_point(position + direction * futere_steps * 4):
+	while not bound_box.has_point(position + direction * (futere_steps + 4)):
 		direction = directions.pop_front()
 
 func place_room(pos):

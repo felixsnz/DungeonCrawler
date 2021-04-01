@@ -19,27 +19,33 @@ var rotate_inputs = {
 	"turn_left":90
 	}
 
-var step_direction = Vector3.FORWARD
-var turn_rotation = 0
-var tile_size = 4
-
-
 onready var hitRay = $Head/Camera/HitRay
 onready var animationPlayer = $Head/AnimationPlayer
+onready var weaponPos = $Head/Camera/WeaponPos
 onready var wallRayCast = $RayCast
 onready var tween = $Tween
 onready var camera = $Head/Camera
 onready var debug_camera = $debugCamera
 
+var step_direction = Vector3.FORWARD
+var turn_rotation = 0
+var tile_size = 4
+var weapon 
+
 func _ready():
+	Global.player = self
 	camera.current = true
 	debug_camera.current = false
-	Global.player = self
+	
+	if has_weapon():
+		set_weapon(weaponPos.get_child(0))
+	
+	
 	var angle = deg2rad(rotation_degrees.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle)) * -1
 	wallRayCast.cast_to = step_direction * get_direction_scalar()
 
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_pressed("click"):
 		animationPlayer.play("MeleeAttack")
 		yield(animationPlayer, "animation_finished")
@@ -47,18 +53,9 @@ func _process(delta):
 	if Input.is_action_just_pressed("c_camera"):
 		changue_camera()
 		
-func changue_camera():
-	if camera.current:
-		camera.current = false
-		debug_camera = true
-	else:
-		camera.current = true
-		debug_camera = false
+
 		
-		
-	
-	
-	
+
 func _unhandled_input(event):
 	if $Tween.is_active():
 		return
@@ -79,7 +76,6 @@ func move(dir_key):
 		tween.interpolate_property(self, "translation", translation, new_translation, \
 		1.0/3.0, Tween.TRANS_SINE, Tween.EASE_OUT)
 		tween.start()
-		yield(tween, "tween_completed")
 		call_enemy_turn(new_translation)
 
 func turn_around():
@@ -100,8 +96,8 @@ func get_directions(forward_reference):
 	"back": forward_reference * -1
 	}
 	
-func call_enemy_turn(ignore_pos):
-	get_tree().call_group("enemies", "make_a_step", ignore_pos)
+func call_enemy_turn(player_pos):
+	get_tree().call_group("enemies", "make_a_step", player_pos)
 
 func get_direction_scalar():
 	var scalar = tile_size
@@ -111,5 +107,41 @@ func get_direction_scalar():
 
 func check_raycast():
 	if hitRay.is_colliding():
-		var obj = hitRay.get_collider()
-		obj.damage()
+		var collider = hitRay.get_collider()
+		if collider.is_in_group("hurtboxes"):
+			var obj = collider.get_parent()
+			if obj.is_in_group("enemies"):
+				obj.damage(weapon.damage)
+
+
+
+
+func set_weapon(new_weapon = null):
+	if new_weapon != null:
+		if new_weapon.is_in_group("weapons"):
+			if new_weapon is Weapon:
+				self.weapon = new_weapon
+
+func changue_camera():
+	if camera.current:
+		camera.current = false
+		debug_camera = true
+	else:
+		camera.current = true
+		debug_camera = false
+
+func has_weapon() -> bool:
+	var wpn = weaponPos.get_child(0)
+	if wpn != null:
+		if wpn.is_in_group("weapons"):
+			if wpn is Weapon:
+				return true
+			else:
+				push_error("obj is not a Weapon node")
+				return false
+		else:
+			push_error("obj not in weapons group")
+			return false
+	else:
+		push_error("no obj in weaponPos")
+		return false

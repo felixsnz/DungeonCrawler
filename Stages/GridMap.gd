@@ -6,23 +6,28 @@ onready var astar_node = AStar.new()
 
 onready var map_size = get_parent().BoundBox.size
 var _half_cell_size = cell_size / 2
-var obstacles
 var path_start_position = Vector3() setget _set_path_start_position
 var path_end_position = Vector3() setget _set_path_end_position
-
+var walkable_cells_list 
 var _point_path = []
+#var obstacles
+
+func _ready():
+	Global.grid_map = self
+#	walkable_cells_list = Global.maps.all
+#	add_ready_map(walkable_cells_list)
+#	astar_connect_walkable_cells(walkable_cells_list)
 
 func initiate():
-
-	var walkable_cells_list = astar_add_walkable_cells(obstacles)
-#	var walkable_cells_list = Global.maps.all
+	walkable_cells_list = Global.maps.all
 	add_ready_map(walkable_cells_list)
 	astar_connect_walkable_cells(walkable_cells_list)
-#	print(obstacles)
-	
+#	var walkable_cells_list = astar_add_walkable_cells(obstacles)
+#	var walkable_cells_list = Global.maps.all
+#	add_ready_map(walkable_cells_list)
+#	astar_connect_walkable_cells(walkable_cells_list)
 #	call_deferred("place_debug_meshes", walkable_cells_list, Color.green)
 #	call_deferred("place_debug_meshes", obstacles, Color.red)
-	
 	
 func add_ready_map(map):
 	for loc in map:
@@ -37,7 +42,6 @@ func place_debug_meshes(map, color):
 		get_parent().get_node("Entities").add_child(mesh)
 
 func astar_add_walkable_cells(obstacles = []):
-	print(map_size)
 	var points_array = []
 	for z in range(map_size.z):
 		for x in range(map_size.x):
@@ -57,9 +61,6 @@ func astar_add_walkable_cells(obstacles = []):
 func astar_connect_walkable_cells(points_array):
 	for point in points_array:
 		var point_index = calculate_point_index(point)
-		# For every cell in the map, we check the one to the top, right.
-		# left and bottom of it. If it's in the map and not an obstalce,
-		# We connect the current point with it
 		var points_relative = PoolVector3Array([
 			Vector3(point + Vector3.BACK),
 			Vector3(point + Vector3.FORWARD),
@@ -72,10 +73,6 @@ func astar_connect_walkable_cells(points_array):
 				continue
 			if not astar_node.has_point(point_relative_index):
 				continue
-			# Note the 3rd argument. It tells the astar_node that we want the
-			# connection to be bilateral: from point A to B and B to A
-			# If you set this value to false, it becomes a one-way path
-			# As we loop through all points we can set it to false
 			astar_node.connect_points(point_index, point_relative_index, false)
 
 
@@ -93,7 +90,6 @@ func astar_connect_walkable_cells_diagonal(points_array):
 					continue
 				astar_node.connect_points(point_index, point_relative_index, true)
 
-
 func is_outside_map_bounds(point):
 	return point.x < 0 \
 	or point.y < 0 \
@@ -102,10 +98,8 @@ func is_outside_map_bounds(point):
 	or point.y >= map_size.y \
 	or point.z >= map_size.z
 
-
 func calculate_point_index(point):
 	return point.x + map_size.x * point.z
-
 
 func find_path(world_start, world_end):
 	self.path_start_position = world_to_map(world_start)
@@ -116,8 +110,6 @@ func find_path(world_start, world_end):
 		var point_world = map_to_world(point.x, point.y, point.z)
 		point_world.y += 3.5
 		path_world.append(point_world)
-	
-#	generate_path(path_world)
 	return path_world
 
 func generate_path(path):
@@ -130,15 +122,13 @@ func generate_path(path):
 func _recalculate_path():
 	var start_point_index = calculate_point_index(path_start_position)
 	var end_point_index = calculate_point_index(path_end_position)
-	# This method gives us an array of points. Note you need the start and end
-	# points' indices as input
 	_point_path = astar_node.get_point_path(start_point_index, end_point_index)
 	if _point_path.size() > 0:
 		_point_path.remove(_point_path.size() -1)
 
 # Setters for the start and end path values.
 func _set_path_start_position(value):
-	if value in obstacles:
+	if not value in walkable_cells_list:
 		return
 	if is_outside_map_bounds(value):
 		return
@@ -147,7 +137,7 @@ func _set_path_start_position(value):
 		_recalculate_path()
 
 func _set_path_end_position(value):
-	if value in obstacles:
+	if not value in walkable_cells_list:
 		return
 	if is_outside_map_bounds(value):
 		return

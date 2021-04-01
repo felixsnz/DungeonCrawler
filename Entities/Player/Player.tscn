@@ -4,12 +4,11 @@
 [ext_resource path="res://Entities/Player/playerg.gd" type="Script" id=2]
 [ext_resource path="res://Common/HurtBox.tscn" type="PackedScene" id=3]
 
-[sub_resource type="CapsuleShape" id=3]
+[sub_resource type="CapsuleShape" id=1]
 radius = 0.625195
 height = 0.90352
 
-[sub_resource type="Animation" id=1]
-resource_name = "MeleeAttack"
+[sub_resource type="Animation" id=2]
 length = 0.8
 tracks/0/type = "value"
 tracks/0/path = NodePath("Camera/WeaponPos:translation")
@@ -62,7 +61,7 @@ tracks/3/keys = {
 } ]
 }
 
-[sub_resource type="CapsuleMesh" id=2]
+[sub_resource type="CapsuleMesh" id=3]
 radius = 0.565
 
 [node name="Player" type="KinematicBody"]
@@ -71,7 +70,7 @@ script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-shape = SubResource( 3 )
+shape = SubResource( 1 )
 
 [node name="Head" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0 )
@@ -82,7 +81,8 @@ current = true
 [node name="HitRay" type="RayCast" parent="Head/Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.178, 0 )
 cast_to = Vector3( 0, 0, -4.5 )
-collision_mask = 8
+collision_mask = 16
+collide_with_areas = true
 
 [node name="WeaponPos" type="Position3D" parent="Head/Camera"]
 transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0.55, -0.25, -0.9 )
@@ -95,14 +95,14 @@ one_shot = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Head"]
 playback_speed = 1.7
-anims/MeleeAttack = SubResource( 1 )
+anims/MeleeAttack = SubResource( 2 )
 
 [node name="HurtBox" parent="." instance=ExtResource( 3 )]
 collision_layer = 4
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-mesh = SubResource( 2 )
+mesh = SubResource( 3 )
 material/0 = null
 
 [node name="RayCast" type="RayCast" parent="."]
@@ -111,6 +111,6 @@ cast_to = Vector3( 0, 0, -5 )
 collision_mask = 9
 
 [node name="debugCamera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 90, 0 )
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 40, 0 )
 
 [node name="Tween" type="Tween" parent="."]

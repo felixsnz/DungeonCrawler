@@ -1,11 +1,10 @@
-extends KinematicBody
+extends Spatial
 
 onready var animationPlayer = $AnimationPlayer
 onready var rayCast = $RayCast
+onready var stats = $Stats
 
-var path
-
-var tile_size = 4
+export(bool) var visible_path
 
 enum STATES {
 	IDLE,
@@ -13,36 +12,44 @@ enum STATES {
 	WANDERING
 }
 
-export var state = STATES.IDLE
-
-export var health = 10
+var state = STATES.IDLE
 
 func _ready():
-	self.health = 10
 	pass
 
-func _physics_process(delta):
+func _physics_process(_delta):
+	look_at_player()
+	
+
+func make_a_step(player_pos):
+	clear_path()
+	var path = Global.grid_map.find_path(translation, player_pos)
+	if path and len(path) > 1:
+		var target_step = path[1]
+		$Tween.interpolate_property(self, "translation", translation, \
+		target_step, .5, Tween.TRANS_SINE, Tween.EASE_OUT)
+		$Tween.start()
+		if visible_path:
+			Global.grid_map.generate_path(path)
+
+func damage(amount):
+	animationPlayer.play("damage_shake")
+	stats.health -= amount
+
+func clear_path():
+	if visible_path:
+		for mesh in get_tree().get_nodes_in_group("debug_objects"):
+			if mesh.get_surface_material(0).albedo_color == Color.purple:
+				mesh.queue_free()
+
+func look_at_player():
 	var player = Global.player
 	if player != null:
 		look_at(player.global_transform.origin, Vector3.UP)
 
-func make_a_step(player_pos):
-	for mesh in get_tree().get_nodes_in_group("debug_objects"):
-		if mesh.get_surface_material(0).albedo_color == Color.purple:
-			mesh.queue_free()
-		
-	var path = get_parent().get_parent().get_node("GridMap")\
-	.find_path(translation, player_pos)
-#	print("from (spider translation): ", translation)
-#	print("to (player translation): ", player_pos)
-	if path and len(path) > 1:
-		var target_step = path[1]
-		
-		$Tween.interpolate_property(self, "translation", translation, \
-		target_step, .5, Tween.TRANS_SINE, Tween.EASE_OUT)
-		$Tween.start()
-#	else:
-#		print("no path or size 0")
+func _on_Stats_health_changed(value):
+	pass # Replace with function body.
 
-func damage():
-	animationPlayer.play("damage_shake")
+
+func _on_Stats_no_health():
+	queue_free()

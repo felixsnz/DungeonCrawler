@@ -5,26 +5,25 @@ export(bool) var debuging_mode
 const Spider = preload("res://Entities/Enemies/Spider/Spider.tscn")
 const Player = preload("res://Entities/Player/Player.tscn")
 const debug_mesh = preload("res://Debug&Test/debug_mesh.tscn")
-const BOX_WIDTH = round(320/2)
-const BOX_LENGTH = round(180/2)
+const BOX_WIDTH = round(320/4)
+const BOX_LENGTH = round(180/4)
 const BOX_HEIGHT = 4
 const cell_size = 4
 
 var BoundBox = AABB(Vector3.ZERO, Vector3(BOX_WIDTH, BOX_HEIGHT, BOX_LENGTH))
 
-onready var grid = $GridMap
+onready var gridMap = $GridMap
 onready var entities = $Entities
 var maps
 var obstcle_counter = 0
 func _ready():
-	print("papa", BoundBox.size)
-	
 	randomize()
 	generate_dungeon()
-	$GridMap.obstacles = MapTools.get_cell_by_id($GridMap, 2)
-	$GridMap.initiate()
+#	gridMap.obstacles = MapTools.get_cell_by_id(gridMap, 2)
+	gridMap.initiate()
 
 func reload_leve():
+# warning-ignore:return_value_discarded
 	get_tree().reload_current_scene()
 
 
@@ -32,7 +31,7 @@ func reload_leve():
 func generate_dungeon():
 	var walker_pos = Vector3(BOX_WIDTH/2, 0, BOX_LENGTH/2).ceil()
 	var walker = Walker.new(walker_pos, BoundBox)
-	maps = walker.walk(150, 7)
+	maps = walker.walk(200, 7)
 	Global.maps = maps
 	
 #	for x in BoundBox.size.x:
@@ -47,14 +46,14 @@ func generate_dungeon():
 #	for location in maps.rooms:
 #		grid.set_cell_item(location.x, location.y, location.z, 2)
 	for location in maps.all:
-		grid.set_cell_item(location.x, location.y, location.z, 1)
+		gridMap.set_cell_item(location.x, location.y, location.z, 1)
 	if not debuging_mode:
 		for location in maps.all:
-			grid.set_cell_item(location.x, location.y + 2, location.z, 0)
+			gridMap.set_cell_item(location.x, location.y + 2, location.z, 0)
 	for location in maps.walls:
-		grid.set_cell_item(location.x, location.y + 1, location.z, 0)
+		gridMap.set_cell_item(location.x, location.y + 1, location.z, 0)
 	for location in maps.walls:
-		grid.set_cell_item(location.x, 0, location.z, 2)
+		gridMap.set_cell_item(location.x, 0, location.z, 2)
 		obstcle_counter +=1
 
 		
@@ -68,6 +67,8 @@ func generate_dungeon():
 	player.translate(player_pos * cell_size \
 	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0))
 	$Entities.add_child(player)
+	if debuging_mode:
+		player.changue_camera()
 	
 	var spider = Spider.instance()
 	var spider_pos = MapTools.random_items(player_room, 1).front()
@@ -80,9 +81,6 @@ func generate_dungeon():
 
 
 
-#func place_grid(gridmap, map, g_index):
-#	for location in map:
-#		gridmap.set_cell_item()
 	
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -90,10 +88,10 @@ func _input(event):
 			reload_leve()
 		if event.scancode == KEY_1:
 			for location in maps.rooms:
-				grid.set_cell_item(location.x, location.y, location.z, 2)
+				gridMap.set_cell_item(location.x, location.y, location.z, 2)
 		if event.scancode == KEY_2:
 			for location in maps.halls:
-				grid.set_cell_item(location.x, location.y, location.z, 1)
+				gridMap.set_cell_item(location.x, location.y, location.z, 1)
 		if event.scancode == KEY_3:
 			reload_leve()
 		if event.scancode == KEY_4:

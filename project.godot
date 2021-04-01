@@ -23,11 +23,17 @@ _global_script_classes=[ {
 "class": "Walker",
 "language": "GDScript",
 "path": "res://Common/ProceduralGeneration/walker.gd"
+}, {
+"base": "Spatial",
+"class": "Weapon",
+"language": "GDScript",
+"path": "res://Entities/Weapons/Weapon.gd"
 } ]
 _global_script_class_icons={
 "MapTools": "",
 "MathTools": "",
-"Walker": ""
+"Walker": "",
+"Weapon": ""
 }
 
 [application]

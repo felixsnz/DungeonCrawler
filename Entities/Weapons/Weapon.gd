@@ -1,14 +1,7 @@
 extends Spatial
+class_name Weapon
 
-onready var dagger_sprite = load("res://Sprites/Dagger.png")
-
-enum WEAPONS {
-	DAGGER
-}
-
-export var weapon = WEAPONS.DAGGER
+export(int) var damage = 1
 
 func _ready():
-	match (weapon):
-		WEAPONS.DAGGER:
-			$WeaponSprite.texture = dagger_sprite
+	pass
