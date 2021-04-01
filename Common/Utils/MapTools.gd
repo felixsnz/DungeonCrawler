@@ -71,3 +71,12 @@ static func get_diagonals(location):
 		topleft = location + Vector3.FORWARD + Vector3.LEFT,
 		topright = location + Vector3.FORWARD + Vector3.RIGHT,
 	}
+
+static func get_cell_by_id(grid_map: GridMap, wanted_item: int) -> Array:
+	var used_cells = grid_map.get_used_cells()
+	var results = []
+	for cell_position in used_cells:
+		var item = grid_map.get_cell_item(cell_position.x, cell_position.y, cell_position.z)
+		if item == wanted_item:
+			results.append(cell_position)
+	return results

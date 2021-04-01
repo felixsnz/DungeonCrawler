@@ -22,8 +22,9 @@ tracks/0/keys = {
 "values": [ Vector3( 0, 0, 0 ), Vector3( 0.553121, 0.148743, 0 ), Vector3( -0.557641, 0.0531492, 0 ), Vector3( 0.216206, 0.132779, 0 ), Vector3( -0.306589, 0.0897522, 0 ), Vector3( 0, 0, 0 ) ]
 }
 
-[node name="Spider" type="KinematicBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.792, 0 )
+[node name="Spider" type="KinematicBody" groups=[
+"enemies",
+]]
 collision_layer = 8
 collision_mask = 0
 script = ExtResource( 1 )
@@ -32,9 +33,16 @@ script = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform( 15, 0, 0, 0, 15, 0, 0, 0, 1, 0, 0, 0 )
+transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 1, 0, 0, 0 )
 offset = Vector2( 0.5, 0 )
 texture = ExtResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/damage_shake = SubResource( 2 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="RayCast" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 0, 0, -5 )
+collision_mask = 5

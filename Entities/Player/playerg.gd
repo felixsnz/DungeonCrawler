@@ -15,8 +15,8 @@ const static_inps = {
 	}
 
 var rotate_inputs = {
-	"turn_right":-45,
-	"turn_left":45
+	"turn_right":-90,
+	"turn_left":90
 	}
 
 var step_direction = Vector3.FORWARD
@@ -27,6 +27,7 @@ var tile_size = 4
 onready var hitRay = $Head/Camera/HitRay
 onready var animationPlayer = $Head/AnimationPlayer
 onready var wallRayCast = $RayCast
+onready var tween = $Tween
 
 func _ready():
 	Global.player = self
@@ -57,9 +58,10 @@ func move(dir_key):
 	wallRayCast.force_raycast_update()
 	if !wallRayCast.is_colliding():
 		var new_translation = translation + step_direction * get_direction_scalar()
-		$Tween.interpolate_property(self, "translation", translation, new_translation, \
+		tween.interpolate_property(self, "translation", translation, new_translation, \
 		1.0/3.0, Tween.TRANS_SINE, Tween.EASE_OUT)
-		$Tween.start()
+		tween.start()
+		call_enemy_turn(new_translation)
 
 func turn_around():
 	var new_rotation = rotation_degrees
@@ -78,6 +80,9 @@ func get_directions(forward_reference):
 	"forward": forward_reference,
 	"back": forward_reference * -1
 	}
+	
+func call_enemy_turn(ignore_pos):
+	get_tree().call_group("enemies", "make_a_step", ignore_pos)
 
 func get_direction_scalar():
 	var scalar = tile_size

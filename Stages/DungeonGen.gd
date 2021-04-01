@@ -13,9 +13,15 @@ var BoundBox = AABB(Vector3.ZERO, Vector3(BOX_WIDTH, BOX_HEIGHT, BOX_LENGTH))
 onready var grid = $GridMap
 onready var entities = $Entities
 var maps
+var obstcle_counter = 0
 func _ready():
+	
 	randomize()
 	generate_dungeon()
+	$GridMap.obstacles = MapTools.get_cell_by_id($GridMap, 2)
+	print($GridMap.obstacles.size())
+	$GridMap.initiate()
+	print($GridMap.obstacles.size())
 
 func reload_leve():
 	get_tree().reload_current_scene()
@@ -32,12 +38,14 @@ func generate_dungeon():
 	
 	for location in maps.all:
 		grid.set_cell_item(location.x, location.y, location.z, 1)
-
-	for location in maps.all:
-		grid.set_cell_item(location.x, location.y + 2, location.z, 0)
-
+#	for location in maps.all:
+#		grid.set_cell_item(location.x, location.y + 2, location.z, 0)
 	for location in maps.walls:
 		grid.set_cell_item(location.x, location.y + 1, location.z, 0)
+	for location in maps.walls:
+		grid.set_cell_item(location.x, 0, location.z, 2)
+		obstcle_counter +=1
+	print("real shit: ", obstcle_counter)
 		
 	var ind_rooms = walker.extract_rooms(maps.rooms)
 		
@@ -47,7 +55,7 @@ func generate_dungeon():
 	var player_pos = walker.get_room_center(player_room)
 #	print("grid player location: ", player_pos)
 	player.translate(player_pos * cell_size \
-	+ Vector3(cell_size/2.0, 5.5, cell_size/2.0))
+	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0))
 	$Entities.add_child(player)
 	print("player_transform", player.translation)
 	
