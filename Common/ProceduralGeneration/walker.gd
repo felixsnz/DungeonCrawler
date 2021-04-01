@@ -22,11 +22,11 @@ func walk(steps, hall_lenght):
 	var halls_map = []
 	for i in steps:
 		if steps_since_turn >= hall_lenght:
-			changue_direction()
+			changue_direction(hall_lenght)
 		if can_step():
 			step_history.append(position)
 		else:
-			changue_direction()
+			changue_direction(hall_lenght)
 		if i == steps - 1:
 			place_room(position)
 	
@@ -108,7 +108,7 @@ func can_step():
 	else:
 		return false
 
-func changue_direction():
+func changue_direction(futere_steps):
 	if randf() < .30:
 		place_room(position)
 	steps_since_turn = 0
@@ -116,7 +116,7 @@ func changue_direction():
 	directions.erase(direction)
 	directions.shuffle()
 	direction = directions.pop_front()
-	while not bound_box.has_point(position + direction):
+	while not bound_box.has_point(position + direction * futere_steps * 4):
 		direction = directions.pop_front()
 
 func place_room(pos):
@@ -126,7 +126,7 @@ func place_room(pos):
 	for z in size.z:
 		for x in size.x:
 			var new_step = top_left_corner + Vector3(x, 0, z)
-			if bound_box.grow(1).has_point(new_step):
+			if bound_box.grow(2).has_point(new_step):
 				step_history.append(new_step)
 
 func remove_duplicates(arr):
@@ -159,7 +159,6 @@ func get_room_center(room):
 #	var neighbors = MapTools.get_neighbors(center)
 #	for neighbor in neighbors.values():
 #		if not neighbor in room or not center in room:
-#			print("cagaste", room.size())
 #			var sub_map = MapTools.neighbors_map(room, 4)
 #			center = sub_map[randi() % sub_map.size()]
 	return center

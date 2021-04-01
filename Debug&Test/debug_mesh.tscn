@@ -1,13 +1,31 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
-[sub_resource type="SpatialMaterial" id=1]
-albedo_color = Color( 0.988235, 0.0156863, 0.0156863, 1 )
+[sub_resource type="CubeMesh" id=1]
 
-[sub_resource type="CubeMesh" id=2]
-material = SubResource( 1 )
+[sub_resource type="SpatialMaterial" id=3]
+resource_local_to_scene = true
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends MeshInstance
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+func set_color(color):
+	self.get_surface_material(0).albedo_color = color
+"
 
 [node name="Spatial" type="MeshInstance" groups=[
 "debug_objects",
 ]]
-mesh = SubResource( 2 )
-material/0 = null
+mesh = SubResource( 1 )
+material/0 = SubResource( 3 )
+script = SubResource( 2 )

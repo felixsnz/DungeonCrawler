@@ -3,27 +3,49 @@ extends GridMap
 const debug_mesh = preload("res://Debug&Test/debug_mesh.tscn")
 
 onready var astar_node = AStar.new()
-var obstacles
+
 onready var map_size = get_parent().BoundBox.size
 var _half_cell_size = cell_size / 2
-
+var obstacles
 var path_start_position = Vector3() setget _set_path_start_position
 var path_end_position = Vector3() setget _set_path_end_position
 
 var _point_path = []
 
 func initiate():
-	var walkable_cells_list = astar_add_walkable_cells(obstacles)
-	astar_connect_walkable_cells(walkable_cells_list)
-	
-	
-	
 
+	var walkable_cells_list = astar_add_walkable_cells(obstacles)
+#	var walkable_cells_list = Global.maps.all
+	add_ready_map(walkable_cells_list)
+	astar_connect_walkable_cells(walkable_cells_list)
+#	print(obstacles)
+	
+#	call_deferred("place_debug_meshes", walkable_cells_list, Color.green)
+#	call_deferred("place_debug_meshes", obstacles, Color.red)
+	
+	
+func add_ready_map(map):
+	for loc in map:
+		var point_index = calculate_point_index(loc)
+		astar_node.add_point(point_index, loc)
+	
+func place_debug_meshes(map, color):
+	for loc in map:
+		var mesh = debug_mesh.instance()
+		mesh.translation = map_to_world(loc.x, 2, loc.z)
+		mesh.set_color(color)
+		get_parent().get_node("Entities").add_child(mesh)
 
 func astar_add_walkable_cells(obstacles = []):
+	print(map_size)
 	var points_array = []
 	for z in range(map_size.z):
 		for x in range(map_size.x):
+			if z == 0 or x == 0 or z == map_size.z-1 or x == map_size.x-1:
+				var mesh = debug_mesh.instance()
+				mesh.translation = map_to_world(x, 2, z)
+				mesh.set_color(Color.green)
+				get_parent().get_node("Entities").add_child(mesh)
 			var point = Vector3(x, 0, z)
 			if point in obstacles:
 				continue
@@ -92,16 +114,17 @@ func find_path(world_start, world_end):
 	var path_world = []
 	for point in _point_path:
 		var point_world = map_to_world(point.x, point.y, point.z)
-		point_world.y += 4
+		point_world.y += 3.5
 		path_world.append(point_world)
 	
-	generate_path(path_world)
+#	generate_path(path_world)
 	return path_world
 
 func generate_path(path):
 	for location in path:
 		var deb_mesh = debug_mesh.instance()
 		deb_mesh.translation = location
+		deb_mesh.set_color(Color.purple)
 		get_parent().get_node("Entities").add_child(deb_mesh)
 	
 func _recalculate_path():
@@ -113,8 +136,6 @@ func _recalculate_path():
 	if _point_path.size() > 0:
 		_point_path.remove(_point_path.size() -1)
 
-
-
 # Setters for the start and end path values.
 func _set_path_start_position(value):
 	if value in obstacles:
@@ -124,7 +145,6 @@ func _set_path_start_position(value):
 	path_start_position = value
 	if path_end_position and path_end_position != path_start_position:
 		_recalculate_path()
-
 
 func _set_path_end_position(value):
 	if value in obstacles:

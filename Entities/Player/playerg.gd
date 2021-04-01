@@ -28,8 +28,12 @@ onready var hitRay = $Head/Camera/HitRay
 onready var animationPlayer = $Head/AnimationPlayer
 onready var wallRayCast = $RayCast
 onready var tween = $Tween
+onready var camera = $Head/Camera
+onready var debug_camera = $debugCamera
 
 func _ready():
+	camera.current = true
+	debug_camera.current = false
 	Global.player = self
 	var angle = deg2rad(rotation_degrees.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle)) * -1
@@ -40,7 +44,21 @@ func _process(delta):
 		animationPlayer.play("MeleeAttack")
 		yield(animationPlayer, "animation_finished")
 		hitRay.force_raycast_update()
-
+	if Input.is_action_just_pressed("c_camera"):
+		changue_camera()
+		
+func changue_camera():
+	if camera.current:
+		camera.current = false
+		debug_camera = true
+	else:
+		camera.current = true
+		debug_camera = false
+		
+		
+	
+	
+	
 func _unhandled_input(event):
 	if $Tween.is_active():
 		return
@@ -61,6 +79,7 @@ func move(dir_key):
 		tween.interpolate_property(self, "translation", translation, new_translation, \
 		1.0/3.0, Tween.TRANS_SINE, Tween.EASE_OUT)
 		tween.start()
+		yield(tween, "tween_completed")
 		call_enemy_turn(new_translation)
 
 func turn_around():

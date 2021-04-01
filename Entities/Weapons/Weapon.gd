@@ -11,7 +11,4 @@ export var weapon = WEAPONS.DAGGER
 func _ready():
 	match (weapon):
 		WEAPONS.DAGGER:
-			print("popo")
 			$WeaponSprite.texture = dagger_sprite
-		
-	pass

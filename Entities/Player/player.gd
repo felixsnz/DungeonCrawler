@@ -1,9 +1,9 @@
 extends KinematicBody
 
-var GRAVITY = - 9.8 * 3
+var GRAVITY = 0
 var vel = Vector3()
-const MAX_SPEED = 20
-const JUMP_SPEED = 22
+const MAX_SPEED = 30
+const JUMP_SPEED = 10
 const ACCEL = 4.5
 
 var dir = Vector3()
@@ -12,6 +12,7 @@ const DEACCEL= 16
 const MAX_SLOPE_ANGLE = 40
 
 var camera
+var debug_camera
 var rotation_helper
 
 var MOUSE_SENSITIVITY = 0.2
@@ -19,6 +20,7 @@ var MOUSE_SENSITIVITY = 0.2
 func _ready():
 	Global.player = self
 	camera = $Head/Camera
+	debug_camera = $debugCamera
 	rotation_helper = $Head
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -54,12 +56,16 @@ func process_input(_delta):
 
 	# ----------------------------------
 	# Jumping
-	if is_on_floor():
-		if Input.is_action_just_pressed("jump"):
-#			GRAVITY = -1
-			vel.y = JUMP_SPEED
+	if Input.is_action_pressed("jump"):
+		vel.y = JUMP_SPEED
+	if Input.is_action_just_released("jump"):
+		vel.y = 0
+	if Input.is_action_pressed("down"):
+		vel.y = -JUMP_SPEED
+	if Input.is_action_just_released("down"):
+		vel.y = 0
 	# ----------------------------------
-
+	
 	# ----------------------------------
 	# Capturing/Freeing the cursor
 	if Input.is_action_just_pressed("ui_cancel"):
@@ -73,6 +79,16 @@ func process_input(_delta):
 		$Head/AnimationPlayer.play("MeleeAttack")
 #	if Input.is_action_pressed("down"):
 ##		GRAVITY = -9.8 * 3.4
+	if Input.is_action_just_pressed("c_camera"):
+		changue_camera()
+		
+func changue_camera():
+	if camera.current:
+		camera.current = false
+		debug_camera = true
+	else:
+		camera.current = true
+		debug_camera = false
 
 func process_movement(delta):
 	dir.y = 0
