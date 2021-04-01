@@ -30,16 +30,14 @@ onready var debug_camera = $debugCamera
 var step_direction = Vector3.FORWARD
 var turn_rotation = 0
 var tile_size = 4
-var weapon 
+var weapon = null
 
 func _ready():
 	Global.player = self
 	camera.current = true
 	debug_camera.current = false
-	
-	if has_weapon():
+	if is_grabing_weapon():
 		set_weapon(weaponPos.get_child(0))
-	
 	
 	var angle = deg2rad(rotation_degrees.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle)) * -1
@@ -47,24 +45,26 @@ func _ready():
 
 func _process(_delta):
 	if Input.is_action_pressed("click"):
-		animationPlayer.play("MeleeAttack")
-		yield(animationPlayer, "animation_finished")
-		hitRay.force_raycast_update()
+		if not animationPlayer.is_playing():
+			animationPlayer.play("MeleeAttack")
+			yield(animationPlayer, "animation_finished")
+			hitRay.force_raycast_update()
 	if Input.is_action_just_pressed("c_camera"):
 		changue_camera()
 		
 
-		
+func has_weapon() -> bool:
+	return weapon != null
 
 func _unhandled_input(event):
 	if $Tween.is_active():
 		return
 	for dir_key in move_inputs.keys():
-		if event.is_action_pressed(dir_key):
+		if event.is_action(dir_key):
 			step_direction = move_inputs[dir_key]
 			move(dir_key)
 	for rotate_key in rotate_inputs.keys():
-		if event.is_action_pressed(rotate_key):
+		if event.is_action(rotate_key):
 			turn_rotation = rotate_inputs[rotate_key]
 			turn_around()
 
@@ -74,15 +74,21 @@ func move(dir_key):
 	if !wallRayCast.is_colliding():
 		var new_translation = translation + step_direction * get_direction_scalar()
 		tween.interpolate_property(self, "translation", translation, new_translation, \
-		1.0/3.0, Tween.TRANS_SINE, Tween.EASE_OUT)
+		0.6, Tween.TRANS_LINEAR)
 		tween.start()
+		animationPlayer.play("walking")
 		call_enemy_turn(new_translation)
+
+func stop_walking_check():
+	if not tween.is_active():
+		animationPlayer.stop()
 
 func turn_around():
 	var new_rotation = rotation_degrees
 	new_rotation.y =  rotation_degrees.y + turn_rotation
 	$Tween.interpolate_property(self, "rotation_degrees", rotation_degrees, new_rotation, \
-	1.0/3.0, Tween.TRANS_SINE, Tween.EASE_OUT)
+	.5, Tween.TRANS_SINE, Tween.EASE_OUT)
+	
 	$Tween.start()
 	var angle = deg2rad(new_rotation.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle))* -1
@@ -111,9 +117,13 @@ func check_raycast():
 		if collider.is_in_group("hurtboxes"):
 			var obj = collider.get_parent()
 			if obj.is_in_group("enemies"):
-				obj.damage(weapon.damage)
+				if has_weapon():
+					obj.damage(weapon.damage)
 
-
+func remove_weapon():
+	var wpn = weaponPos.get_child(0)
+	weaponPos.remove_child(wpn)
+	return wpn
 
 
 func set_weapon(new_weapon = null):
@@ -130,18 +140,5 @@ func changue_camera():
 		camera.current = true
 		debug_camera = false
 
-func has_weapon() -> bool:
-	var wpn = weaponPos.get_child(0)
-	if wpn != null:
-		if wpn.is_in_group("weapons"):
-			if wpn is Weapon:
-				return true
-			else:
-				push_error("obj is not a Weapon node")
-				return false
-		else:
-			push_error("obj not in weapons group")
-			return false
-	else:
-		push_error("no obj in weaponPos")
-		return false
+func is_grabing_weapon() -> bool:
+	return weaponPos.get_child(0) != null
