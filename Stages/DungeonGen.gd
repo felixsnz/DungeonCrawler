@@ -16,6 +16,7 @@ onready var gridMap = $GridMap
 onready var entities = $Entities
 var maps
 var obstcle_counter = 0
+var player_initial_pos
 func _ready():
 	randomize()
 	generate_dungeon()
@@ -62,9 +63,9 @@ func generate_dungeon():
 	var player_room = walker.get_start_room(ind_rooms)
 	
 	var player = Player.instance()
-	var player_pos = walker.get_room_center(player_room)
+	player_initial_pos = walker.get_room_center(player_room)
 
-	player.translate(player_pos * cell_size \
+	player.translate(player_initial_pos * cell_size \
 	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0))
 	$Entities.add_child(player)
 	if debuging_mode:
@@ -72,15 +73,34 @@ func generate_dungeon():
 	
 	var spider = Spider.instance()
 	var spider_pos = MapTools.random_items(player_room, 1).front()
-	while spider_pos == player_pos:
+	while spider_pos == player_initial_pos:
 		spider_pos = MapTools.random_items(player_room, 1).front()
 		
 	spider.translate(spider_pos * cell_size + \
 	Vector3(cell_size/2.0, 3.5, cell_size/2.0))
 	$Entities.call_deferred("add_child", spider)
+	
+	generate_enemies(Spider, ind_rooms, 0.06)
 
+func generate_enemies(enemy, ind_rooms, porcentage):
+	for room in ind_rooms:
+		if player_initial_pos in room:
+			continue
+		var n_enemies = round(room.size() * porcentage)
+		room.shuffle()
+		var positions = MapTools.random_items(room, n_enemies)
+		for position in positions:
+			create_instance(enemy, position * cell_size \
+			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), entities)
+#	call_deferred("emit_signal", "enemies_generated")
 
-
+func create_instance(Obj, trans, parent = null):
+	var obj = Obj.instance()
+	if parent == null:
+		parent = get_tree().current_scene
+	parent.call_deferred("add_child", obj)
+	obj.translation = trans
+	return obj
 	
 func _input(event):
 	if event is InputEventKey and event.pressed:

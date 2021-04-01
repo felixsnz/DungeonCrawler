@@ -52,4 +52,4 @@ func _on_Stats_health_changed(value):
 
 
 func _on_Stats_no_health():
-	queue_free()
+	animationPlayer.play("dead")

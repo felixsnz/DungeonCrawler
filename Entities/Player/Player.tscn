@@ -108,7 +108,6 @@ shape = SubResource( 1 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0 )
 
 [node name="Camera" type="Camera" parent="Head"]
-v_offset = -0.1
 current = true
 
 [node name="HitRay" type="RayCast" parent="Head/Camera"]
