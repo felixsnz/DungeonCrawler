@@ -79,26 +79,29 @@ func _unhandled_input(event):
 		if event.is_action_pressed("click"):
 			animationPlayer.play("MeleeAttack")
 			yield(animationPlayer, "animation_finished")
+			emit_signal("end_turn", self.translation)
 			hitRay.force_raycast_update()
 			
 
 func move(dir_key):
-	wallRayCast.cast_to = static_inps[dir_key] * get_direction_scalar()
-	wallRayCast.force_raycast_update()
-	if !wallRayCast.is_colliding():
-		is_on_turn = false
-		var new_translation = translation + step_direction * get_direction_scalar()
-		tween.interpolate_property(self, "translation", translation, new_translation, \
-		0.6, Tween.TRANS_LINEAR)
-		tween.start()
-		animationPlayer.play("walking")
-		emit_signal("end_turn", new_translation)
+	if not animationPlayer.current_animation == "MeleeAttack":
+		wallRayCast.cast_to = static_inps[dir_key] * get_direction_scalar()
+		wallRayCast.force_raycast_update()
+		if !wallRayCast.is_colliding():
+			is_on_turn = false
+			var new_translation = translation + step_direction * get_direction_scalar()
+			tween.interpolate_property(self, "translation", translation, new_translation, \
+			0.6, Tween.TRANS_LINEAR)
+			tween.start()
+			animationPlayer.play("walking")
+			emit_signal("end_turn", new_translation)
 
 func stop_walking_check():
 	if not tween.is_active():
 		animationPlayer.stop()
 
 func turn_around():
+	animationPlayer.stop()
 	var new_rotation = rotation_degrees
 	new_rotation.y =  rotation_degrees.y + turn_rotation
 	$Tween.interpolate_property(self, "rotation_degrees", rotation_degrees, new_rotation, \
