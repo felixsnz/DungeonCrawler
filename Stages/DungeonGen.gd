@@ -14,9 +14,15 @@ var BoundBox = AABB(Vector3.ZERO, Vector3(BOX_WIDTH, BOX_HEIGHT, BOX_LENGTH))
 
 onready var gridMap = $GridMap
 onready var entities = $Entities
+onready var player = $Entities/Player
+onready var enemies = $Entities/Enemies
+
+
 var maps
 var obstcle_counter = 0
 var player_initial_pos
+
+
 func _ready():
 	randomize()
 	generate_dungeon()
@@ -32,7 +38,7 @@ func reload_leve():
 func generate_dungeon():
 	var walker_pos = Vector3(BOX_WIDTH/2, 0, BOX_LENGTH/2).ceil()
 	var walker = Walker.new(walker_pos, BoundBox)
-	maps = walker.walk(200, 7)
+	maps = walker.walk(100, 7)
 	Global.maps = maps
 	
 #	for x in BoundBox.size.x:
@@ -62,25 +68,16 @@ func generate_dungeon():
 		
 	var player_room = walker.get_start_room(ind_rooms)
 	
-	var player = Player.instance()
 	player_initial_pos = walker.get_room_center(player_room)
 
 	player.translate(player_initial_pos * cell_size \
 	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0))
-	$Entities.add_child(player)
 	if debuging_mode:
 		player.changue_camera()
 	
-	var spider = Spider.instance()
-	var spider_pos = MapTools.random_items(player_room, 1).front()
-	while spider_pos == player_initial_pos:
-		spider_pos = MapTools.random_items(player_room, 1).front()
-		
-	spider.translate(spider_pos * cell_size + \
-	Vector3(cell_size/2.0, 3.5, cell_size/2.0))
-	$Entities.call_deferred("add_child", spider)
-	
 	generate_enemies(Spider, ind_rooms, 0.06)
+#	create_instance(Spider, MapTools.random_items(player_room, 1).front() * cell_size \
+#			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)
 
 func generate_enemies(enemy, ind_rooms, porcentage):
 	for room in ind_rooms:
@@ -91,7 +88,7 @@ func generate_enemies(enemy, ind_rooms, porcentage):
 		var positions = MapTools.random_items(room, n_enemies)
 		for position in positions:
 			create_instance(enemy, position * cell_size \
-			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), entities)
+			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)
 #	call_deferred("emit_signal", "enemies_generated")
 
 func create_instance(Obj, trans, parent = null):

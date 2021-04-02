@@ -112,12 +112,7 @@ func find_path(world_start, world_end):
 		path_world.append(point_world)
 	return path_world
 
-func generate_path(path):
-	for location in path:
-		var deb_mesh = debug_mesh.instance()
-		deb_mesh.translation = location
-		deb_mesh.set_color(Color.purple)
-		get_parent().get_node("Entities").add_child(deb_mesh)
+
 	
 func _recalculate_path():
 	var start_point_index = calculate_point_index(path_start_position)

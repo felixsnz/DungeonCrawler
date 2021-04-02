@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Stages/DungeonGen.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Gridmap.meshlib" type="MeshLibrary" id=2]
 [ext_resource path="res://Stages/GridMap.gd" type="Script" id=3]
+[ext_resource path="res://Entities/Player/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Stages/Entities.gd" type="Script" id=5]
+[ext_resource path="res://Entities/Enemies/EnemiesHandler.gd" type="Script" id=6]
 
 [node name="DungeonGen" type="Spatial"]
 script = ExtResource( 1 )
@@ -22,3 +25,11 @@ __meta__ = {
 }
 
 [node name="Entities" type="Spatial" parent="."]
+script = ExtResource( 5 )
+
+[node name="Player" parent="Entities" instance=ExtResource( 4 )]
+
+[node name="Enemies" type="Spatial" parent="Entities"]
+script = ExtResource( 6 )
+[connection signal="end_turn" from="Entities/Player" to="Entities" method="_on_Player_end_turn"]
+[connection signal="end_turn" from="Entities/Enemies" to="Entities" method="_on_Enemies_end_turn"]

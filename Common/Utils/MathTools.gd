@@ -18,3 +18,11 @@ static func get_inverse_degrees(degrees) -> int:
 	var radians = deg2rad(degrees)
 	var inverse_vector = Vector2(sin(radians), cos(radians))
 	return int(rad2deg(inverse_vector.angle()) + 90)
+
+static func get_directions(forward_reference):
+	return {
+	"right": forward_reference.cross(Vector3.UP),
+	"left": -forward_reference.cross(Vector3.UP),
+	"forward": forward_reference,
+	"back": forward_reference * -1
+	}
