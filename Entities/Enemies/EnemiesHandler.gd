@@ -20,6 +20,7 @@ func play_turn(player_final_position):
 		call_enemies_turn(player_final_position)
 		enemies_to_attack.clear()
 		if enemies_can_attack(player_final_position):
+			print(enemies_to_attack.size())
 			for enmy in enemies_to_attack:
 				enmy.try_to_tackle(player, player_final_position)
 				yield(enmy, "has_attacked")
@@ -46,8 +47,8 @@ func enemies_can_attack(player_pos) -> bool:
 				var rel = (enemy.translation + dir * 4)
 				if player_pos.is_equal_approx(rel):
 					enemies_to_attack.append(enemy)
-				if enemies_to_attack.size() > 0:
-					return true
+		if enemies_to_attack.size() > 0:
+			return true
 		return false
 	else:
 		return false
@@ -71,11 +72,11 @@ func call_enemies_turn(player_final_pos):
 				for shrd_enemy in share_step_enemies:
 					shrd_enemy.end_turn()
 				if not enabled_enemy.has_moved:
-					enabled_enemy.make_step(target_step)
+					enabled_enemy.make_step(player_final_pos, target_step)
 					enabled_enemy.has_moved = true
 			else:
 				if not enemy.has_moved:
-					enemy.make_step(target_step)
+					enemy.make_step(player_final_pos, target_step)
 					enemy.has_moved = true
 
 func reset_move_check_on_enemies():

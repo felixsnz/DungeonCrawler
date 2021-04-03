@@ -116,7 +116,7 @@ max_health = 5
 [node name="BodyAxis" type="Spatial" parent="."]
 
 [node name="Body" type="Sprite3D" parent="BodyAxis"]
-transform = Transform( 10, 0, 0, 0, 9.18216, -0.39608, 0, 3.9608, 0.918216, 0, -0.166667, 0.333333 )
+transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 1, 0, 0, 0 )
 offset = Vector2( 0.5, 0 )
 texture = ExtResource( 2 )
 
@@ -132,7 +132,7 @@ collide_with_bodies = false
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0 )
 enabled = true
 cast_to = Vector3( 0, 0, -5 )
-collision_mask = 15
+collision_mask = 9
 collide_with_areas = true
 
 [node name="HurtBox" parent="." instance=ExtResource( 4 )]

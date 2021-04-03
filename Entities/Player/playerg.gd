@@ -31,28 +31,7 @@ onready var camera = $Head/Camera
 onready var debug_camera = $debugCamera
 onready var stats = $Stats
 
-#enum STATES {
-#	IDLE,
-#	MOVE,
-#	ROTATE,
-#	ATTACK
-#}
-#
-#var state = STATES.IDLE
 
-func _process(delta):
-#	match state:
-#		STATES.IDLE:
-#			idle_state()
-#		STATES.MOVE:
-#			move_state()
-#		STATES.ROTATE:
-#			rotate_state()
-#		STATES.ATTACK:
-#			attack_state()
-#
-	if Input.is_action_just_pressed("c_camera"):
-		changue_camera()
 
 signal end_turn(final_position)
 #signal reach_target_movement(position)
@@ -75,23 +54,9 @@ func _ready():
 	step_direction = Vector3(sin(angle), 0, cos(angle)) * -1
 	wallRayCast.cast_to = step_direction * get_direction_scalar()
 
-
-#func idle_state():
-#	pass
-#func move_state():
-#	pass
-#func rotate_state():
-#	pass
-#func attack_state():
-#	pass
-	
-	
-func play_turn():
-	is_on_turn = true
-	pass
-
-func has_weapon() -> bool:
-	return weapon != null
+func _process(_delta):
+	if Input.is_action_just_pressed("c_camera"):
+		changue_camera()
 
 func _unhandled_input(event):
 	if is_on_turn:
@@ -113,7 +78,6 @@ func _unhandled_input(event):
 			yield(animationPlayer, "animation_finished")
 			end_turn(self.translation)
 			hitRay.force_raycast_update()
-			
 
 func move(dir_key):
 	if not animationPlayer.current_animation == "MeleeAttack":
@@ -127,6 +91,13 @@ func move(dir_key):
 			animationPlayer.play("walking")
 			end_turn(new_translation)
 
+func play_turn():
+	is_on_turn = true
+	pass
+
+func has_weapon() -> bool:
+	return weapon != null
+
 func stop_walking_check():
 	if not tween.is_active():
 		animationPlayer.stop()
@@ -134,7 +105,6 @@ func stop_walking_check():
 func end_turn(player_pos):
 	is_on_turn = false
 	emit_signal("end_turn", player_pos)
-	
 
 func turn_around():
 	animationPlayer.stop()

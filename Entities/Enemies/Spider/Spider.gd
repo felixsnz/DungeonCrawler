@@ -43,16 +43,15 @@ func get_target_step(target_pos):
 	else:
 		return null
 
-func make_step(target_step):
+func make_step(player_pos, target_step):
 	if can_move:
 		var target_direction = self.translation.direction_to(target_step)
 		rayCastCollide.cast_to = target_direction * cell_size
 		rayCastCollide.force_raycast_update()
-		if !rayCastCollide.is_colliding():
+		if !rayCastCollide.is_colliding() and target_step != player_pos:
 			$Tween.interpolate_property(self, "translation", translation, \
 			target_step, .5, Tween.TRANS_SINE, Tween.EASE_OUT)
 			$Tween.start()
-
 
 func try_to_tackle(player, player_pos):
 	if can_attack:
@@ -82,7 +81,6 @@ func damage(amount):
 func end_turn():
 	emit_signal("has_attacked")
 	
-
 func look_at_player():
 	var player = Global.player
 	if player != null and can_move:
