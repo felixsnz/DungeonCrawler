@@ -72,6 +72,14 @@ static func get_diagonals(location):
 		topright = location + Vector3.FORWARD + Vector3.RIGHT,
 	}
 
+static func get_directions():
+	return  {
+		"right": Vector3.RIGHT,
+		"left": Vector3.LEFT,
+		"forward": Vector3.FORWARD,
+		"back": Vector3.BACK
+	}
+
 static func get_cell_by_id(grid_map: GridMap, wanted_item: int) -> Array:
 	var used_cells = grid_map.get_used_cells()
 	var results = []

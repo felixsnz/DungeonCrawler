@@ -6,6 +6,7 @@ const debug_mesh = preload("res://Debug&Test/debug_mesh.tscn")
 signal end_turn
 export(bool) var visible_path
 var enemies_steps = {}
+var enemies_to_attack = []
 
 func _ready():
 	dungeon_entities.enemies = self
@@ -17,7 +18,39 @@ func play_turn(player_final_position):
 		fill_enemies_steps_list(player_final_position)
 		reset_move_check_on_enemies()
 		call_enemies_turn(player_final_position)
-		call_deferred("emit_signal", "end_turn")
+		enemies_to_attack.clear()
+		if enemies_can_attack(player_final_position):
+			for enmy in enemies_to_attack:
+				enmy.try_to_tackle(player, player_final_position)
+				yield(enmy, "has_attacked")
+			emit_signal("end_turn")
+		else:
+			emit_signal("end_turn")
+
+func get_enemies_to_attack(player_pos):
+	var player = dungeon_entities.player
+	if player != null:
+		for enemy in get_children():
+			var directions = MapTools.get_directions().values()
+			for dir in directions:
+				var rel = (enemy.translation + dir * 4)
+				if player_pos.is_equal_approx(rel):
+					enemies_to_attack.append(enemy)
+
+func enemies_can_attack(player_pos) -> bool:
+	var player = dungeon_entities.player
+	if player != null:
+		for enemy in get_children():
+			var directions = MapTools.get_directions().values()
+			for dir in directions:
+				var rel = (enemy.translation + dir * 4)
+				if player_pos.is_equal_approx(rel):
+					enemies_to_attack.append(enemy)
+				if enemies_to_attack.size() > 0:
+					return true
+		return false
+	else:
+		return false
 
 func fill_enemies_steps_list(target_pos):
 	for enemy in get_children():
@@ -35,8 +68,8 @@ func call_enemies_turn(player_final_pos):
 						share_step_enemies.append(enemies_steps.keys()[i])
 				share_step_enemies.shuffle()
 				var enabled_enemy = share_step_enemies.pop_front()
-#				for shrd_enemy in share_step_enemies:
-#					shrd_enemy.has_moved = true
+				for shrd_enemy in share_step_enemies:
+					shrd_enemy.end_turn()
 				if not enabled_enemy.has_moved:
 					enabled_enemy.make_step(target_step)
 					enabled_enemy.has_moved = true
@@ -80,3 +113,4 @@ func clear_path():
 		for mesh in get_tree().get_nodes_in_group("debug_objects"):
 			if mesh.get_surface_material(0).albedo_color == Color.purple:
 				mesh.queue_free()
+

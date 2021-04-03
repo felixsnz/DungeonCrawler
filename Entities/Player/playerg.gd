@@ -29,8 +29,33 @@ onready var wallRayCast = $RayCast
 onready var tween = $Tween
 onready var camera = $Head/Camera
 onready var debug_camera = $debugCamera
+onready var stats = $Stats
+
+#enum STATES {
+#	IDLE,
+#	MOVE,
+#	ROTATE,
+#	ATTACK
+#}
+#
+#var state = STATES.IDLE
+
+func _process(delta):
+#	match state:
+#		STATES.IDLE:
+#			idle_state()
+#		STATES.MOVE:
+#			move_state()
+#		STATES.ROTATE:
+#			rotate_state()
+#		STATES.ATTACK:
+#			attack_state()
+#
+	if Input.is_action_just_pressed("c_camera"):
+		changue_camera()
 
 signal end_turn(final_position)
+#signal reach_target_movement(position)
 
 var step_direction = Vector3.FORWARD
 var turn_rotation = 0
@@ -50,10 +75,17 @@ func _ready():
 	step_direction = Vector3(sin(angle), 0, cos(angle)) * -1
 	wallRayCast.cast_to = step_direction * get_direction_scalar()
 
-func _process(_delta):
-	if Input.is_action_just_pressed("c_camera"):
-		changue_camera()
-		
+
+#func idle_state():
+#	pass
+#func move_state():
+#	pass
+#func rotate_state():
+#	pass
+#func attack_state():
+#	pass
+	
+	
 func play_turn():
 	is_on_turn = true
 	pass
@@ -63,9 +95,9 @@ func has_weapon() -> bool:
 
 func _unhandled_input(event):
 	if is_on_turn:
+		
 		if event.is_action_pressed("pass_turn"):
-			emit_signal("end_turn", self.translation)
-			is_on_turn = false
+			end_turn(self.translation)
 		if $Tween.is_active():
 			return
 		for dir_key in move_inputs.keys():
@@ -79,7 +111,7 @@ func _unhandled_input(event):
 		if event.is_action_pressed("click"):
 			animationPlayer.play("MeleeAttack")
 			yield(animationPlayer, "animation_finished")
-			emit_signal("end_turn", self.translation)
+			end_turn(self.translation)
 			hitRay.force_raycast_update()
 			
 
@@ -88,17 +120,21 @@ func move(dir_key):
 		wallRayCast.cast_to = static_inps[dir_key] * get_direction_scalar()
 		wallRayCast.force_raycast_update()
 		if !wallRayCast.is_colliding():
-			is_on_turn = false
 			var new_translation = translation + step_direction * get_direction_scalar()
 			tween.interpolate_property(self, "translation", translation, new_translation, \
 			0.6, Tween.TRANS_LINEAR)
 			tween.start()
 			animationPlayer.play("walking")
-			emit_signal("end_turn", new_translation)
+			end_turn(new_translation)
 
 func stop_walking_check():
 	if not tween.is_active():
 		animationPlayer.stop()
+
+func end_turn(player_pos):
+	is_on_turn = false
+	emit_signal("end_turn", player_pos)
+	
 
 func turn_around():
 	animationPlayer.stop()
@@ -132,6 +168,10 @@ func remove_weapon():
 	weaponPos.remove_child(wpn)
 	return wpn
 
+func damage(amount):
+#	animationPlayer.play("damage_shake")
+	stats.health -= amount
+
 
 func set_weapon(new_weapon = null):
 	if new_weapon != null:
@@ -149,3 +189,7 @@ func changue_camera():
 
 func is_grabing_weapon() -> bool:
 	return weaponPos.get_child(0) != null
+
+
+func _on_Stats_no_health():
+	queue_free()
