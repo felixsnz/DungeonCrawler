@@ -18,6 +18,7 @@ var has_moved = false
 var can_move = true
 var can_attack = true
 var damage = 1
+var can_dead = true
 
 signal has_attacked
 
@@ -35,6 +36,12 @@ func _ready():
 
 func _physics_process(_delta):
 	look_at_player()
+	
+	if stats.health == 0 and can_dead:
+		can_dead = false
+		animationPlayer.stop()
+		animationPlayer.play("dead")
+		yield(animationPlayer, "animation_finished")
 
 func get_target_step(target_pos):
 	var path = Global.grid_map.find_path(self.translation, target_pos)
@@ -45,6 +52,8 @@ func get_target_step(target_pos):
 
 func make_step(player_pos, target_step):
 	if can_move:
+		if animationPlayer.is_playing():
+			yield(animationPlayer, "animation_finished")
 		var target_direction = self.translation.direction_to(target_step)
 		rayCastCollide.cast_to = target_direction * cell_size
 		rayCastCollide.force_raycast_update()
@@ -54,14 +63,17 @@ func make_step(player_pos, target_step):
 			$Tween.start()
 
 func try_to_tackle(player, player_pos):
-	if can_attack:
-		if player.tween.is_active():
-			yield(player.tween, "tween_completed")
-		var directions = static_directions.values()
-		for dir in directions:
-			var rel = self.translation + dir * cell_size
-			if rel.is_equal_approx(player_pos):
-				animationPlayer.play("tackle")
+	if player != null:
+		if can_attack:
+			if player.tween.is_active():
+				yield(player.tween, "tween_completed")
+			var directions = static_directions.values()
+			for dir in directions:
+				var rel = self.translation + dir * cell_size
+				if rel.is_equal_approx(player_pos):
+					if animationPlayer.is_playing():
+						yield(animationPlayer,"animation_finished")
+					animationPlayer.play("tackle")
 
 func check_raycast():
 	if rayCastAttack.is_colliding():
@@ -69,7 +81,12 @@ func check_raycast():
 		var obj = collider.get_parent()
 		obj.damage(damage)
 
+func end_turn_and_free():
+	end_turn()
+	queue_free()
+
 func disable_movement():
+	print("disableado")
 	can_attack = false
 	can_move = false
 	hurtBox.get_node("CollisionShape").disabled = true
@@ -91,3 +108,17 @@ func _on_Stats_health_changed(value):
 
 func _on_Stats_no_health():
 	animationPlayer.play("dead")
+
+
+func _on_HurtBox_area_entered(area):
+	var posible_spell = area.get_parent()
+	if posible_spell.is_in_group("spells"):
+	
+		stats.health -= posible_spell.damage
+		print(stats.health)
+#		animationPlayer.play("dead")
+		animationPlayer.play("damage_shake")
+		posible_spell.impact()
+		yield(animationPlayer, "animation_finished")
+		
+		

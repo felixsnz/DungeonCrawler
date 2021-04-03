@@ -3,7 +3,8 @@
 [ext_resource path="res://Assets/Textures/Dagger.png" type="Texture" id=1]
 [ext_resource path="res://Entities/Weapons/Weapon.gd" type="Script" id=2]
 
-[node name="Weapon" type="Spatial" groups=[
+[node name="Dagger" type="Spatial" groups=[
+"melees",
 "weapons",
 ]]
 script = ExtResource( 2 )

@@ -7,9 +7,12 @@ signal end_turn
 export(bool) var visible_path
 var enemies_steps = {}
 var enemies_to_attack = []
+signal enemies_steps_list_filled(list)
 
 func _ready():
 	dungeon_entities.enemies = self
+	var player = dungeon_entities.player
+	self.connect("enemies_steps_list_filled", player, "get_enemies_steps")
 	
 func play_turn(player_final_position):
 	var player = dungeon_entities.player
@@ -20,10 +23,12 @@ func play_turn(player_final_position):
 		call_enemies_turn(player_final_position)
 		enemies_to_attack.clear()
 		if enemies_can_attack(player_final_position):
-			print(enemies_to_attack.size())
 			for enmy in enemies_to_attack:
-				enmy.try_to_tackle(player, player_final_position)
-				yield(enmy, "has_attacked")
+				if enmy != null:
+					enmy.try_to_tackle(player, player_final_position)
+					yield(enmy, "has_attacked")
+				else:
+					print("enemy was null")
 			emit_signal("end_turn")
 		else:
 			emit_signal("end_turn")
@@ -56,6 +61,7 @@ func enemies_can_attack(player_pos) -> bool:
 func fill_enemies_steps_list(target_pos):
 	for enemy in get_children():
 		add_step_to_enemies_steps(enemy, target_pos)
+	emit_signal("enemies_steps_list_filled", enemies_steps)
 
 func call_enemies_turn(player_final_pos):
 	for enemy in get_children():
