@@ -1,6 +1,6 @@
 extends Spatial
 
-const dungeon_entities = preload("res://Common/SpriptableClasses/DungeonEntities.tres")
+const dungeon_entities = preload("res://Common/SpriptableClasses/battle_units.tres")
 const debug_mesh = preload("res://Debug&Test/debug_mesh.tscn")
 
 signal end_turn

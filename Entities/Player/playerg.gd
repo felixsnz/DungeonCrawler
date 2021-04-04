@@ -1,7 +1,7 @@
 extends Spatial
 
 const debug_mesh = preload("res://Debug&Test/debug_mesh.tscn")
-const dungeon_entities = preload("res://Common/SpriptableClasses/DungeonEntities.tres")
+const dungeon_entities = preload("res://Common/SpriptableClasses/battle_units.tres")
 
 var move_inputs = {
 	"right": Vector3.RIGHT,
@@ -31,7 +31,7 @@ onready var camera = $Head/Camera
 onready var debug_camera = $debugCamera
 onready var stats = $Stats
 
-
+var speed = 1.5
 
 signal end_turn(final_position)
 #signal reach_target_movement(position)
@@ -73,23 +73,25 @@ func _unhandled_input(event):
 			if event.is_action(rotate_key):
 				turn_rotation = rotate_inputs[rotate_key]
 				turn_around()
-		if event.is_action_pressed("click"):
-			if has_weapon():
-				if weapon.is_in_group("staffs"):
-					if stats.mana >= weapon.mana_cost:
-						is_on_turn = false
-						animationPlayer.play("SpellAttack")
-						yield(weapon, "can_end_turn")
-						end_turn(self.translation)
-					else:
-						print("no mana")
-						pass
-				if weapon.is_in_group("melees"):
-					animationPlayer.play("MeleeAttack")
-					is_on_turn = false
-					hitRay.force_raycast_update()
-					yield(animationPlayer, "animation_finished")
-					end_turn(self.translation)
+
+func attack():
+	if has_weapon():
+		if weapon.is_in_group("staffs"):
+			if stats.mana >= weapon.mana_cost:
+				is_on_turn = false
+				animationPlayer.play("SpellAttack")
+				yield(weapon, "can_end_turn")
+				end_turn(self.translation)
+			else:
+				print("no mana")
+				pass
+		if weapon.is_in_group("melees"):
+			animationPlayer.play("MeleeAttack")
+			is_on_turn = false
+			hitRay.force_raycast_update()
+			yield(animationPlayer, "animation_finished")
+			end_turn(self.translation)
+
 
 func staff_attack():
 	stats.mana -= weapon.mana_cost
@@ -105,7 +107,7 @@ func move(dir_key):
 		var new_translation = translation + step_direction * get_direction_scalar()
 		if !wallRayCast.is_colliding() and not new_translation in enemies_steps_copy:
 			tween.interpolate_property(self, "translation", translation, new_translation, \
-			0.6, Tween.TRANS_LINEAR)
+			1/speed, Tween.TRANS_LINEAR)
 			tween.start()
 			animationPlayer.play("walking")
 			end_turn(new_translation)

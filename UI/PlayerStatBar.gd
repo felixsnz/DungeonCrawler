@@ -53,11 +53,7 @@ func animate_value(start, end):
 	end, .5, Tween.TRANS_LINEAR, Tween.EASE_OUT)
 	$Tween.start()
 	if end < start:
-		pass
-		if value_type == "Hp":
-			animationPlayer.play("hp_color_indicator")
-		elif value_type == "Ap":
-			animationPlayer.play("ap_color_indicator")
+		animationPlayer.play("blink_indicator")
 		emit_signal("health_changued", null)
 		
 		

@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/nostalig_staff_icon.obj-b3d7f5a7df8f6c160c9a89bdfc4bb7c1.mesh"
+
+[deps]
+
+files=[ "res://.import/nostalig_staff_icon.obj-b3d7f5a7df8f6c160c9a89bdfc4bb7c1.mesh" ]
+
+source_file="res://Assets/Models/nostalig_staff_icon.obj"
+dest_files=[ "res://.import/nostalig_staff_icon.obj-b3d7f5a7df8f6c160c9a89bdfc4bb7c1.mesh", "res://.import/nostalig_staff_icon.obj-b3d7f5a7df8f6c160c9a89bdfc4bb7c1.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

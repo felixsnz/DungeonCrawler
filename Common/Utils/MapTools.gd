@@ -48,10 +48,13 @@ static func get_outline_map(rooms):
 	return walls_map2
 		
 
-static func random_items(arr, n):
+static func random_items(arr, n, ignore_item = null):
 	var new_arr = []
 	while new_arr.size() < n:
 		var rand_i = randi() % arr.size()
+		if ignore_item != null:
+			while arr[rand_i] == ignore_item:
+				rand_i = randi() % arr.size()
 		if not arr[rand_i] in new_arr:
 			new_arr.append(arr[rand_i])
 	return new_arr

@@ -1,10 +1,10 @@
 extends Spatial
 
 onready var animationPlayer = $AnimationPlayer
-onready var rayCastAttack = $BodyAxis/Body/RayCastAttack
+onready var rayCastAttack = $BodyAxis/spider/RayCastAttack
 onready var rayCastCollide = $RayCastCollide
 onready var stats = $Stats
-onready var body = $BodyAxis/Body
+onready var body = $BodyAxis/spider
 onready var hurtBox = $HurtBox
 
 const static_directions = {
@@ -89,10 +89,11 @@ func disable_movement():
 	print("disableado")
 	can_attack = false
 	can_move = false
+	$CollisionShape.disabled = true
 	hurtBox.get_node("CollisionShape").disabled = true
 
 func damage(amount):
-	animationPlayer.play("damage_shake")
+#	animationPlayer.play("damage_shake")
 	stats.health -= amount
 
 func end_turn():

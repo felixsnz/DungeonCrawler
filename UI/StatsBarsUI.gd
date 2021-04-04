@@ -1,6 +1,5 @@
 extends Control
-
-const dungeon_entities = preload("res://Common/SpriptableClasses/DungeonEntities.tres")
+const dungeon_entities = preload("res://Common/SpriptableClasses/battle_units.tres")
 
 
 # Declare member variables here. Examples:

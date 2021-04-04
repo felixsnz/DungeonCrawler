@@ -4,6 +4,7 @@ onready var timer : Timer = $Timer
 
 export(String) var parent_property
 export(String) var second_property = null
+export(bool) var is_prop_vec3
 export(Vector2) var default_value = Vector2.ZERO
 export var amplitude : = 6.0
 export var duration : = 0.8 setget set_duration
@@ -30,11 +31,19 @@ func _process(_delta: float) -> void:
 		get_parent().set_indexed(second_property, 
 		rand_range(amplitude, -amplitude) * damping
 		)
+		
+	if is_prop_vec3:
+		get_parent().set_indexed(parent_property, 
+		Vector3 (
+		rand_range(amplitude, -amplitude) * damping,
+		rand_range(0, amplitude) * damping,
+		rand_range(amplitude, -amplitude) * damping)
+		)
+		
 	
 
 func _on_ShakeTimer_timeout() -> void:
 	if default_value != Vector2.ZERO:
-		print("seting default")
 		get_parent().set_indexed(parent_property, default_value)
 	self.shake = false
 
@@ -51,7 +60,7 @@ func set_shake(value: bool) -> void:
 		$Timer.start()
 
 func _on_shake_requested(values = null):
-	print("shake requested")
+	print("shake request")
 	if values != null:
 		self.amplitude = values.amplitude
 		self.duration = values.duration
@@ -61,6 +70,5 @@ func _on_shake_requested(values = null):
 
 func _on_Timer_timeout():
 	if default_value != Vector2.ZERO:
-		print("seting default")
 		get_parent().set_indexed(parent_property, default_value)
 	self.shake = false

@@ -1,5 +1,6 @@
 extends Resource
-class_name DungeonEntities
+class_name BattleUnits
 
-var player
-var enemies
+var player = null
+var enemies = null
+var battle_ui = null

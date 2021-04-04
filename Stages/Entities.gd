@@ -1,6 +1,6 @@
 extends Spatial
 
-const dungeon_entities = preload("res://Common/SpriptableClasses/DungeonEntities.tres")
+const dungeon_entities = preload("res://Common/SpriptableClasses/battle_units.tres")
 
 onready var player = $Player
 onready var enemies = $Enemies
@@ -25,6 +25,9 @@ func _on_Player_end_turn(final_position):
 
 func _on_Enemies_end_turn():
 	if dungeon_entities.player != null:
+		var battle_ui = dungeon_entities.battle_ui
+		if battle_ui != null:
+			dungeon_entities.battle_ui.disable(false)
 		player.play_turn()
 #		yield(player, "end_turn")
 #		start_enemies_turn()

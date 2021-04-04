@@ -5,6 +5,7 @@ export(bool) var debuging_mode
 const Spider = preload("res://Entities/Enemies/Spider/Spider.tscn")
 const Player = preload("res://Entities/Player/Player.tscn")
 const debug_mesh = preload("res://Debug&Test/debug_mesh.tscn")
+const Stairs = preload("res://Entities/Stairs.tscn")
 const BOX_WIDTH = round(320/4)
 const BOX_LENGTH = round(180/4)
 const BOX_HEIGHT = 4
@@ -21,13 +22,19 @@ onready var enemies = $Entities/Enemies
 var maps
 var obstcle_counter = 0
 var player_initial_pos
-
+var walker
+var stairs_pos
 
 func _ready():
 	randomize()
-	generate_dungeon()
+	var walker_pos = Vector3(BOX_WIDTH/2, 0, BOX_LENGTH/2).ceil()
+	walker = Walker.new(walker_pos, BoundBox)
+	maps = walker.walk(100, 7)
+	Global.maps = maps
+	
 #	gridMap.obstacles = MapTools.get_cell_by_id(gridMap, 2)
 	gridMap.initiate()
+	generate_dungeon()
 
 func reload_leve():
 # warning-ignore:return_value_discarded
@@ -36,10 +43,7 @@ func reload_leve():
 
 
 func generate_dungeon():
-	var walker_pos = Vector3(BOX_WIDTH/2, 0, BOX_LENGTH/2).ceil()
-	var walker = Walker.new(walker_pos, BoundBox)
-	maps = walker.walk(100, 7)
-	Global.maps = maps
+	
 	
 #	for x in BoundBox.size.x:
 #		for z in BoundBox.size.z:
@@ -53,7 +57,7 @@ func generate_dungeon():
 #	for location in maps.rooms:
 #		grid.set_cell_item(location.x, location.y, location.z, 2)
 	for location in maps.all:
-		gridMap.set_cell_item(location.x, location.y, location.z, 1)
+		gridMap.set_cell_item(location.x, location.y, location.z, 0)
 	if not debuging_mode:
 		for location in maps.all:
 			gridMap.set_cell_item(location.x, location.y + 2, location.z, 0)
@@ -69,13 +73,34 @@ func generate_dungeon():
 	var player_room = walker.get_start_room(ind_rooms)
 	
 	player_initial_pos = walker.get_room_center(player_room)
+	
+	var end_room = walker.get_end_room(player_initial_pos, ind_rooms)
+	
+	stairs_pos = walker.get_room_center(end_room)
+	
+	var stairs = Stairs.instance()
+	
+	var end_room_idx = gridMap.calculate_point_index(stairs_pos)
+	gridMap.astar_node.set_point_disabled(end_room_idx)
+#	var points = gridMap.astar_node.get_points()
+#	for point in points:
+#		print(point)
+#		var dbg = debug_mesh.instance()
+#		var pos = gridMap.astar_node.get_point_position(point)
+#		dbg.translation = gridMap.map_to_world(pos.x, pos.y, pos.z) + Vector3(0,6,0)
+#		entities.add_child(dbg)
+	
+	stairs.translate(stairs_pos * cell_size \
+	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0))
+	
+	entities.add_child(stairs)
 
 	player.translate(player_initial_pos * cell_size \
 	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0))
 	if debuging_mode:
 		player.changue_camera()
 	
-	generate_enemies(Spider, ind_rooms, 0.06)
+	generate_enemies(Spider, ind_rooms, 0.01)
 #	create_instance(Spider, MapTools.random_items(player_room, 1).front() * cell_size \
 #			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)
 
@@ -85,7 +110,7 @@ func generate_enemies(enemy, ind_rooms, porcentage):
 			continue
 		var n_enemies = round(room.size() * porcentage)
 		room.shuffle()
-		var positions = MapTools.random_items(room, n_enemies)
+		var positions = MapTools.random_items(room, n_enemies, stairs_pos)
 		for position in positions:
 			create_instance(enemy, position * cell_size \
 			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)

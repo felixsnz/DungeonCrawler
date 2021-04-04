@@ -1,47 +1,13 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://UI/PlayerStatBar.tscn" type="PackedScene" id=1]
 [ext_resource path="res://UI/StatsBarsUI.gd" type="Script" id=2]
 
-[sub_resource type="Animation" id=1]
-resource_local_to_scene = true
-resource_name = "ap_color_indicator"
-length = 0.3
-step = 0.05
-tracks/0/type = "value"
-tracks/0/path = NodePath("Count/Label:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.15, 0.3 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 0.0156863, 0.690196, 0.988235, 1 ), Color( 1, 1, 1, 1 ) ]
-}
-
-[sub_resource type="Animation" id=2]
-resource_local_to_scene = true
-resource_name = "ap_color_indicator"
-length = 0.3
-step = 0.05
-tracks/0/type = "value"
-tracks/0/path = NodePath("Count/Label:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.15, 0.3 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 0.0156863, 0.690196, 0.988235, 1 ), Color( 1, 1, 1, 1 ) ]
-}
-
 [node name="StatsBarsUI" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 11.679
+margin_right = 11.679
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -51,24 +17,11 @@ __meta__ = {
 trans_type = 5
 value_type = "Hp"
 
-[node name="AnimationPlayer" parent="PlayerHealthBar" index="3"]
-anims/ap_color_indicator = SubResource( 1 )
-
 [node name="PlayerManaBar" parent="." instance=ExtResource( 1 )]
 margin_top = 64.0
 margin_bottom = 64.0
-rect_scale = Vector2( 0.707, 1 )
 trans_type = 7
 value_type = "Ap"
-
-[node name="ValueBar" parent="PlayerManaBar" index="1"]
-tint_progress = Color( 0.0823529, 0.113725, 0.882353, 1 )
-
-[node name="Label" parent="PlayerManaBar/Count" index="1"]
-modulate = Color( 1, 1, 1, 1 )
-
-[node name="AnimationPlayer" parent="PlayerManaBar" index="3"]
-anims/ap_color_indicator = SubResource( 2 )
 
 [editable path="PlayerHealthBar"]
 

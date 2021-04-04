@@ -148,7 +148,7 @@ script = ExtResource( 2 )
 
 [node name="Stats" parent="." instance=ExtResource( 4 )]
 max_health = 30
-max_mana = 50
+max_mana = 200
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
@@ -207,7 +207,7 @@ collision_mask = 9
 collide_with_areas = true
 
 [node name="debugCamera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 20, 0 )
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 90, 0 )
 
 [node name="Tween" type="Tween" parent="."]
 [connection signal="health_reduced" from="Stats" to="Head/Camera/Shaker" method="_on_shake_requested"]

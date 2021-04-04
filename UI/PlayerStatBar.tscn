@@ -1,20 +1,13 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://Assets/bar_container.png" type="Texture" id=1]
+[ext_resource path="res://Assets/UI/bar_container.png" type="Texture" id=1]
 [ext_resource path="res://UI/PlayerStatBar.gd" type="Script" id=2]
-[ext_resource path="res://Assets/template_bar.png" type="Texture" id=3]
-[ext_resource path="res://Resources/PixelRPG.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Assets/UI/template_bar.png" type="Texture" id=3]
 [ext_resource path="res://Common/Shaker.tscn" type="PackedScene" id=5]
-
-[sub_resource type="DynamicFont" id=1]
-size = 30
-outline_size = 1
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 4 )
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=6]
 
 [sub_resource type="Animation" id=2]
-resource_local_to_scene = true
-resource_name = "ap_color_indicator"
+resource_name = "blink_indicator"
 length = 0.3
 step = 0.05
 tracks/0/type = "value"
@@ -27,33 +20,16 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.15, 0.3 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 0.0156863, 0.690196, 0.988235, 1 ), Color( 1, 1, 1, 1 ) ]
-}
-
-[sub_resource type="Animation" id=3]
-resource_name = "hp_color_indicator"
-length = 0.3
-step = 0.05
-tracks/0/type = "value"
-tracks/0/path = NodePath("Count/Label:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.15, 0.3 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 0.992157, 0.301961, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 0.560784, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
 [node name="PlayerStatBar" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 4.0
-margin_bottom = 4.0
+margin_left = 2.1123
+margin_top = 9.66324
+margin_right = 2.1123
+margin_bottom = 9.66321
 mouse_filter = 2
 script = ExtResource( 2 )
 __meta__ = {
@@ -61,11 +37,12 @@ __meta__ = {
 }
 
 [node name="WhiteBar" type="TextureProgress" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 852.0
+margin_bottom = 65.0
+rect_scale = Vector2( 0.7, 1 )
 texture_under = ExtResource( 3 )
 texture_progress = ExtResource( 3 )
-tint_under = Color( 0.184314, 0.184314, 0.184314, 1 )
+tint_under = Color( 0.25098, 0.313726, 0.0627451, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -73,10 +50,14 @@ __meta__ = {
 [node name="ValueBar" type="TextureProgress" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
+rect_scale = Vector2( 0.7, 1 )
 texture_over = ExtResource( 1 )
 texture_progress = ExtResource( 3 )
-tint_over = Color( 0.427451, 0.427451, 0.427451, 1 )
-tint_progress = Color( 1, 0, 0, 1 )
+tint_over = Color( 0.160784, 0.207843, 0.0235294, 1 )
+tint_progress = Color( 0.439216, 0.501961, 0.156863, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Count" type="NinePatchRect" parent="."]
 margin_right = 40.0
@@ -94,7 +75,8 @@ margin_left = 19.4454
 margin_top = 20.1525
 margin_right = 199.445
 margin_bottom = 45.1525
-custom_fonts/font = SubResource( 1 )
+theme = ExtResource( 6 )
+custom_colors/font_color = Color( 0.160784, 0.207843, 0.0235294, 1 )
 text = "aaaaaaaaa"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -107,8 +89,7 @@ duration = 0.3
 DAMP_EASING = 0.435275
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/ap_color_indicator = SubResource( 2 )
-anims/hp_color_indicator = SubResource( 3 )
+anims/blink_indicator = SubResource( 2 )
 
 [node name="Tween" type="Tween" parent="."]
 [connection signal="health_changued" from="." to="Count/Shaker" method="_on_shake_requested"]
