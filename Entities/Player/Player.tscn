@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Entities/Weapons/Staff.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Entities/Player/playerg.gd" type="Script" id=2]
 [ext_resource path="res://Common/HurtBox.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Common/Stats.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Common/Shaker.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.625195
@@ -170,6 +171,13 @@ transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0
 
 [node name="Staff" parent="Head/Camera/WeaponPos" instance=ExtResource( 1 )]
 
+[node name="Shaker" parent="Head/Camera" instance=ExtResource( 5 )]
+parent_property = "h_offset"
+second_property = "v_offset"
+amplitude = 0.15
+duration = 0.3
+DAMP_EASING = 0.420448
+
 [node name="Timer" type="Timer" parent="Head"]
 one_shot = true
 
@@ -188,6 +196,7 @@ shape = SubResource( 5 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
+visible = false
 mesh = SubResource( 6 )
 material/0 = null
 
@@ -201,6 +210,7 @@ collide_with_areas = true
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 20, 0 )
 
 [node name="Tween" type="Tween" parent="."]
+[connection signal="health_reduced" from="Stats" to="Head/Camera/Shaker" method="_on_shake_requested"]
 [connection signal="no_health" from="Stats" to="." method="_on_Stats_no_health"]
 
 [editable path="HurtBox"]

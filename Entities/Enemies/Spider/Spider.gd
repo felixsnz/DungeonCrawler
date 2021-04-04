@@ -41,7 +41,7 @@ func _physics_process(_delta):
 		can_dead = false
 		animationPlayer.stop()
 		animationPlayer.play("dead")
-		yield(animationPlayer, "animation_finished")
+#		yield(animationPlayer, "animation_finished")
 
 func get_target_step(target_pos):
 	var path = Global.grid_map.find_path(self.translation, target_pos)
@@ -111,14 +111,13 @@ func _on_Stats_no_health():
 
 
 func _on_HurtBox_area_entered(area):
+	
 	var posible_spell = area.get_parent()
 	if posible_spell.is_in_group("spells"):
 	
 		stats.health -= posible_spell.damage
 		print(stats.health)
-#		animationPlayer.play("dead")
-		animationPlayer.play("damage_shake")
-		posible_spell.impact()
-		yield(animationPlayer, "animation_finished")
+#		animationPlayer.play("damage_shake")
+		posible_spell.impact(self)
 		
 		

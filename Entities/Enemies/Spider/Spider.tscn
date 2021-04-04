@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Entities/Enemies/Spider/Spider.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Textures/Spider Idle 01.png" type="Texture" id=2]
 [ext_resource path="res://Common/Stats.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Common/HurtBox.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Common/Shaker.tscn" type="PackedScene" id=5]
 
 [sub_resource type="SphereShape" id=1]
 radius = 1.01
@@ -21,7 +22,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector3( 0, 0, 0 ), Vector3( 0.553121, 0.148743, 0 ), Vector3( -0.557641, 0.0531492, 0 ), Vector3( 0.216206, 0.132779, 0 ), Vector3( -0.306589, 0.0897522, 0 ), Vector3( 0, 0, 0 ) ]
+"values": [ Vector3( 0.05, 0, 0 ), Vector3( 0.553121, 0.148743, 0 ), Vector3( -0.557641, 0.0531492, 0 ), Vector3( 0.216206, 0.132779, 0 ), Vector3( -0.306589, 0.0897522, 0 ), Vector3( 0.05, 0, 0 ) ]
 }
 
 [sub_resource type="Animation" id=3]
@@ -82,7 +83,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.2, 0.3, 0.6 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 0,
-"values": [ Vector3( 0, 0, 0 ), Vector3( 0, 0, 1 ), Vector3( 0, 0, -2.5 ), Vector3( 0, 0, 0 ) ]
+"values": [ Vector3( 0.05, 0, 0 ), Vector3( 0, 0, 1 ), Vector3( 0, 0, -2.5 ), Vector3( 0.05, 0, 0 ) ]
 }
 tracks/1/type = "method"
 tracks/1/path = NodePath(".")
@@ -114,8 +115,7 @@ max_mana = 1
 [node name="BodyAxis" type="Spatial" parent="."]
 
 [node name="Body" type="Sprite3D" parent="BodyAxis"]
-transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 1, 0, 0, 0 )
-offset = Vector2( 0.5, 0 )
+transform = Transform( 10, 0, 0, 0, 10, 0, 0, 0, 1, 0.05, 0, 0 )
 texture = ExtResource( 2 )
 
 [node name="RayCastAttack" type="RayCast" parent="BodyAxis/Body"]
@@ -125,6 +125,13 @@ cast_to = Vector3( 0, 0, -4 )
 collision_mask = 4
 collide_with_areas = true
 collide_with_bodies = false
+
+[node name="Shaker" parent="BodyAxis/Body" instance=ExtResource( 5 )]
+parent_property = "offset"
+default_value = Vector2( 2, 10 )
+amplitude = 6.0
+duration = 1.0
+DAMP_EASING = 13.9288
 
 [node name="RayCastCollide" type="RayCast" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0 )
@@ -146,6 +153,7 @@ anims/tackle = SubResource( 4 )
 
 [node name="Tween" type="Tween" parent="."]
 [connection signal="health_changed" from="Stats" to="." method="_on_Stats_health_changed"]
+[connection signal="health_reduced" from="Stats" to="BodyAxis/Body/Shaker" method="_on_shake_requested"]
 [connection signal="no_health" from="Stats" to="." method="_on_Stats_no_health"]
 [connection signal="area_entered" from="HurtBox" to="." method="_on_HurtBox_area_entered"]
 

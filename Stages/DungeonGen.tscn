@@ -11,7 +11,9 @@
 script = ExtResource( 1 )
 debuging_mode = true
 
-[node name="GridMap" type="GridMap" parent="."]
+[node name="GridMap" type="GridMap" parent="." groups=[
+"world_objects",
+]]
 mesh_library = ExtResource( 2 )
 cell_size = Vector3( 4, 4, 4 )
 cell_center_y = false

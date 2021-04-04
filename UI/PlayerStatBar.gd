@@ -26,6 +26,7 @@ onready var countIndicator = $Count/Label
 onready var animationPlayer = $AnimationPlayer
 
 export(transition_types) var trans_type
+export(String) var value_type
 
 signal health_changued
 
@@ -53,7 +54,10 @@ func animate_value(start, end):
 	$Tween.start()
 	if end < start:
 		pass
-#		animationPlayer.play("NumberShake")
+		if value_type == "Hp":
+			animationPlayer.play("hp_color_indicator")
+		elif value_type == "Ap":
+			animationPlayer.play("ap_color_indicator")
 		emit_signal("health_changued", null)
 		
 		
@@ -63,4 +67,4 @@ func update_value(value):
 	current_health = value * values_scalar
 
 func update_count_text(value):
-	countIndicator.text = str(clamp(round(value / values_scalar), 0, maximum)) + '/' + str(maximum/values_scalar) + "Hp"
+	countIndicator.text = str(clamp(round(value / values_scalar), 0, maximum)) + '/' + str(maximum/values_scalar) + value_type

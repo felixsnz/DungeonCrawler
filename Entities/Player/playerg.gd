@@ -50,6 +50,8 @@ func _ready():
 	debug_camera.current = false
 	if is_grabing_weapon():
 		set_weapon(weaponPos.get_child(0))
+#	if weapon.is_in_group("staffs"):
+#		connect_weapon_end_turn_signal()
 	
 	var angle = deg2rad(rotation_degrees.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle)) * -1
@@ -74,12 +76,10 @@ func _unhandled_input(event):
 		if event.is_action_pressed("click"):
 			if has_weapon():
 				if weapon.is_in_group("staffs"):
-					print("player has this mana:" , stats.mana)
 					if stats.mana >= weapon.mana_cost:
 						is_on_turn = false
-						print("staff attack")
 						animationPlayer.play("SpellAttack")
-						yield(weapon, "spell_impacted")
+						yield(weapon, "can_end_turn")
 						end_turn(self.translation)
 					else:
 						print("no mana")
@@ -120,7 +120,7 @@ func stop_walking_check():
 	if not tween.is_active():
 		animationPlayer.stop()
 
-func end_turn(player_pos):
+func end_turn(player_pos = self.translation):
 	is_on_turn = false
 	emit_signal("end_turn", player_pos)
 

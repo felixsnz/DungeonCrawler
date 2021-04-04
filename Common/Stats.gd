@@ -14,6 +14,7 @@ signal max_mana_changed(value)
 
 signal no_health
 signal health_changed(value)
+signal health_reduced
 signal max_health_changed(value)
 
 func _ready():
@@ -21,7 +22,11 @@ func _ready():
 	self.mana = max_mana
 
 func set_health(value):
+	var initial_health = self.health
 	health = clamp(value, 0, max_health)
+	
+	if health < initial_health:
+		emit_signal("health_reduced")
 	emit_signal("health_changed", health)
 	if health <= 0:
 		emit_signal("no_health")
