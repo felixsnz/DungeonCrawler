@@ -3,6 +3,7 @@ extends Spatial
 export(bool) var debuging_mode 
 
 const Spider = preload("res://Entities/Enemies/Spider/Spider.tscn")
+const cthulhu = preload("res://Entities/Enemies/Spider/CthulhuHead.tscn")
 const Player = preload("res://Entities/Player/Player.tscn")
 const debug_mesh = preload("res://Debug&Test/debug_mesh.tscn")
 const Stairs = preload("res://Entities/Stairs.tscn")
@@ -24,21 +25,35 @@ var obstcle_counter = 0
 var player_initial_pos
 var walker
 var stairs_pos
+var stairs
 
 func _ready():
+	initiate_level()
+	
+
+func initiate_level():
 	randomize()
 	var walker_pos = Vector3(BOX_WIDTH/2, 0, BOX_LENGTH/2).ceil()
 	walker = Walker.new(walker_pos, BoundBox)
-	maps = walker.walk(100, 7)
+	maps = walker.walk(50, 7)
 	Global.maps = maps
 	
 #	gridMap.obstacles = MapTools.get_cell_by_id(gridMap, 2)
 	gridMap.initiate()
 	generate_dungeon()
+	
 
-func reload_leve():
-# warning-ignore:return_value_discarded
-	get_tree().reload_current_scene()
+func reload_level():
+	gridMap.clear()
+	
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		enemy.queue_free()
+
+	stairs.queue_free()
+	
+	call_deferred("initiate_level")
+	
+	
 
 
 
@@ -78,7 +93,7 @@ func generate_dungeon():
 	
 	stairs_pos = walker.get_room_center(end_room)
 	
-	var stairs = Stairs.instance()
+	stairs = Stairs.instance()
 	
 	var end_room_idx = gridMap.calculate_point_index(stairs_pos)
 	gridMap.astar_node.set_point_disabled(end_room_idx)
@@ -90,17 +105,18 @@ func generate_dungeon():
 #		dbg.translation = gridMap.map_to_world(pos.x, pos.y, pos.z) + Vector3(0,6,0)
 #		entities.add_child(dbg)
 	
-	stairs.translate(stairs_pos * cell_size \
-	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0))
+	stairs.translation = stairs_pos * cell_size \
+	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0)
 	
 	entities.add_child(stairs)
-
-	player.translate(player_initial_pos * cell_size \
-	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0))
+	
+	player.translation = player_initial_pos * cell_size \
+	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0)
 	if debuging_mode:
 		player.changue_camera()
 	
-	generate_enemies(Spider, ind_rooms, 0.01)
+	generate_enemies(Spider, ind_rooms, 0.02)
+	generate_enemies(cthulhu, ind_rooms, 0.02)
 #	create_instance(Spider, MapTools.random_items(player_room, 1).front() * cell_size \
 #			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)
 
@@ -127,17 +143,13 @@ func create_instance(Obj, trans, parent = null):
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.scancode == KEY_0:
-			reload_leve()
+			reload_level()
 		if event.scancode == KEY_1:
 			for location in maps.rooms:
 				gridMap.set_cell_item(location.x, location.y, location.z, 2)
 		if event.scancode == KEY_2:
 			for location in maps.halls:
 				gridMap.set_cell_item(location.x, location.y, location.z, 1)
-		if event.scancode == KEY_3:
-			reload_leve()
-		if event.scancode == KEY_4:
-			reload_leve()
 
 func place_debug_meshes(map, color):
 	for loc in map:

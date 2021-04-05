@@ -11,7 +11,10 @@ albedo_texture = ExtResource( 2 )
 uv1_scale = Vector3( 0.15, 0.15, 0.15 )
 uv1_triplanar = true
 
-[node name="Spatial" type="StaticBody"]
+[node name="Spatial" type="StaticBody" groups=[
+"stairs",
+"world_objects",
+]]
 collision_mask = 2147483648
 
 [node name="CollisionShape" type="CollisionShape" parent="."]

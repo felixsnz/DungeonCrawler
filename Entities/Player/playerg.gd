@@ -34,11 +34,15 @@ onready var stats = $Stats
 var speed = 1.5
 
 signal end_turn(final_position)
+signal wpn_changued(old, new)
 #signal reach_target_movement(position)
 
 var step_direction = Vector3.FORWARD
 var turn_rotation = 0
 var cell_size = 4
+
+export(Array, PackedScene) var weapons = []
+
 var weapon = null
 var is_on_turn = false
 var enemies_steps_copy = []
@@ -48,8 +52,8 @@ func _ready():
 	dungeon_entities.player = self
 	camera.current = true
 	debug_camera.current = false
-	if is_grabing_weapon():
-		set_weapon(weaponPos.get_child(0))
+	set_weapon(weapons.front().instance())
+	
 #	if weapon.is_in_group("staffs"):
 #		connect_weapon_end_turn_signal()
 	
@@ -83,7 +87,6 @@ func attack():
 				yield(weapon, "can_end_turn")
 				end_turn(self.translation)
 			else:
-				print("no mana")
 				pass
 		if weapon.is_in_group("melees"):
 			animationPlayer.play("MeleeAttack")
@@ -105,18 +108,21 @@ func move(dir_key):
 		wallRayCast.cast_to = static_inps[dir_key] * get_direction_scalar()
 		wallRayCast.force_raycast_update()
 		var new_translation = translation + step_direction * get_direction_scalar()
+		var stairs_pos = get_parent().get_parent().stairs_pos
+		if new_translation.is_equal_approx(stairs_pos * cell_size \
+	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0)):
+			dungeon_entities.battle_ui.ask_for_next_level()
 		if !wallRayCast.is_colliding() and not new_translation in enemies_steps_copy:
 			tween.interpolate_property(self, "translation", translation, new_translation, \
 			1/speed, Tween.TRANS_LINEAR)
 			tween.start()
 			animationPlayer.play("walking")
 			end_turn(new_translation)
+			dungeon_entities.battle_ui.hide_popup()
 
 func play_turn():
 	is_on_turn = true
 
-func has_weapon() -> bool:
-	return weapon != null
 
 func stop_walking_check():
 	if not tween.is_active():
@@ -153,6 +159,19 @@ func check_raycast():
 				if has_weapon():
 					obj.damage(weapon.damage)
 
+func has_weapon() -> bool:
+	return weapon != null
+
+func changue_weapon():
+	animationPlayer.play_backwards("set_weapon")
+	yield(animationPlayer, "animation_finished")
+	weapon.queue_free()
+	weapons.invert()
+	var new_weapon = weapons.front().instance()
+	set_weapon(new_weapon)
+	emit_signal("wpn_changued", weapons.back().instance(), new_weapon)
+	
+
 func remove_weapon():
 	var wpn = weaponPos.get_child(0)
 	weaponPos.remove_child(wpn)
@@ -166,10 +185,14 @@ func get_player_direction():
 	return Vector3(sin(rotation.y), 0, cos(rotation.y))
 
 func set_weapon(new_weapon = null):
+	print("setting new weapo")
 	if new_weapon != null:
 		if new_weapon.is_in_group("weapons"):
 			if new_weapon is Weapon:
+				print("setting new wapo")
+				weaponPos.add_child(new_weapon)
 				self.weapon = new_weapon
+				animationPlayer.play("set_weapon")
 
 func changue_camera():
 	if camera.current:
@@ -178,10 +201,6 @@ func changue_camera():
 	else:
 		camera.current = true
 		debug_camera = false
-
-func is_grabing_weapon() -> bool:
-	return weaponPos.get_child(0) != null
-
 
 func _on_Stats_no_health():
 	queue_free()

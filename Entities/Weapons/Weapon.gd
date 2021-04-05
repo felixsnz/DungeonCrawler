@@ -6,6 +6,7 @@ const dungeon_entities = preload("res://Common/SpriptableClasses/battle_units.tr
 const debug_mesh = preload("res://Debug&Test/debug_mesh.tscn")
 
 export(PackedScene) var Spell
+export(Texture) var icon
 
 signal can_end_turn
 export(int) var damage = 1
@@ -35,7 +36,7 @@ func cast_spell():
 	spell.damage = damage
 	world.add_child(spell)
 	spell.global_transform.origin = \
-	player.camera.global_transform.origin + player.get_player_direction() * -0.5
+	player.camera.global_transform.origin + player.get_player_direction() * -1
 	
 
 

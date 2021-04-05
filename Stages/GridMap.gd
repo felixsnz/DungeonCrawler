@@ -19,6 +19,7 @@ func _ready():
 #	astar_connect_walkable_cells(walkable_cells_list)
 
 func initiate():
+	Global.grid_map = self
 	walkable_cells_list = Global.maps.all
 	add_ready_map(walkable_cells_list)
 	astar_connect_walkable_cells(walkable_cells_list)

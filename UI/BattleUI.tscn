@@ -1,25 +1,29 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://UI/BattleUI.gd" type="Script" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
 [ext_resource path="res://Assets/Textures/nostalig_staff_icon.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Textures/mana_pot.png" type="Texture" id=4]
 [ext_resource path="res://Assets/Textures/health_pot.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Textures/nostalig_sword.png" type="Texture" id=6]
+[ext_resource path="res://Resources/theme_styles/normal_btn_style.tres" type="StyleBox" id=7]
+[ext_resource path="res://Assets/Textures/c_weapon_icon.png" type="Texture" id=8]
 
 [node name="BattleUI" type="Control"]
 margin_right = 40.0
 margin_bottom = 40.0
 script = ExtResource( 1 )
 __meta__ = {
-"_edit_use_anchors_": false
+"_edit_use_anchors_": false,
+"_edit_vertical_guides_": [  ]
 }
 
 [node name="AttackBtn" type="Button" parent="."]
-margin_left = 1656.0
-margin_top = 824.0
-margin_right = 1856.0
-margin_bottom = 1024.0
-rect_min_size = Vector2( 200, 200 )
+margin_left = 1624.0
+margin_top = 792.0
+margin_right = 1904.0
+margin_bottom = 1072.0
+rect_min_size = Vector2( 280, 280 )
 theme = ExtResource( 2 )
 icon = ExtResource( 3 )
 expand_icon = true
@@ -28,11 +32,11 @@ __meta__ = {
 }
 
 [node name="PotionsBtns" type="HBoxContainer" parent="."]
-margin_left = 64.0
-margin_top = 864.0
-margin_right = 424.0
-margin_bottom = 1024.0
-custom_constants/separation = 50
+margin_left = 16.0
+margin_top = 904.0
+margin_right = 352.0
+margin_bottom = 1064.0
+custom_constants/separation = 19
 alignment = 1
 __meta__ = {
 "_edit_group_": true,
@@ -40,7 +44,8 @@ __meta__ = {
 }
 
 [node name="HealthPotBtn" type="Button" parent="PotionsBtns"]
-margin_right = 160.0
+margin_left = 3.0
+margin_right = 163.0
 margin_bottom = 160.0
 rect_min_size = Vector2( 160, 160 )
 theme = ExtResource( 2 )
@@ -49,12 +54,58 @@ icon = ExtResource( 5 )
 expand_icon = true
 
 [node name="ManaPotBtn" type="Button" parent="PotionsBtns"]
-margin_left = 210.0
-margin_right = 360.0
+margin_left = 182.0
+margin_right = 332.0
 margin_bottom = 160.0
 rect_min_size = Vector2( 150, 150 )
 theme = ExtResource( 2 )
 text = "6"
 icon = ExtResource( 4 )
 expand_icon = true
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+visible = true
+margin_left = 696.0
+margin_top = 400.0
+margin_right = 1228.0
+margin_bottom = 608.0
+theme = ExtResource( 2 )
+window_title = ""
+dialog_text = "
+
+Advance to next level?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="otherWpn" type="Button" parent="."]
+margin_left = 1480.0
+margin_top = 936.0
+margin_right = 1616.0
+margin_bottom = 1072.0
+custom_styles/hover = ExtResource( 7 )
+custom_styles/pressed = ExtResource( 7 )
+custom_styles/focus = ExtResource( 7 )
+custom_styles/disabled = ExtResource( 7 )
+custom_styles/normal = ExtResource( 7 )
+disabled = true
+icon = ExtResource( 6 )
+expand_icon = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ChangueWpnBtn" type="Button" parent="."]
+margin_left = 1536.0
+margin_top = 848.0
+margin_right = 1616.0
+margin_bottom = 928.0
+theme = ExtResource( 2 )
+icon = ExtResource( 8 )
+expand_icon = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="button_down" from="AttackBtn" to="." method="_on_AttackBtn_button_down"]
+[connection signal="confirmed" from="ConfirmationDialog" to="." method="_on_ConfirmationDialog_confirmed"]
+[connection signal="button_down" from="ChangueWpnBtn" to="." method="_on_ChangueWpnBtn_button_down"]

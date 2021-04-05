@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/cthuluhead.obj-fc9d0b413f1a8659d0d39be712c10223.mesh"
+
+[deps]
+
+files=[ "res://.import/cthuluhead.obj-fc9d0b413f1a8659d0d39be712c10223.mesh" ]
+
+source_file="res://Assets/Models/cthuluhead.obj"
+dest_files=[ "res://.import/cthuluhead.obj-fc9d0b413f1a8659d0d39be712c10223.mesh", "res://.import/cthuluhead.obj-fc9d0b413f1a8659d0d39be712c10223.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+optimize_mesh=true

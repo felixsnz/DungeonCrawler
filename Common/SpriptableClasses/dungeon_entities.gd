@@ -4,3 +4,4 @@ class_name BattleUnits
 var player = null
 var enemies = null
 var battle_ui = null
+var dungeon_generator = null
