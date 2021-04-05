@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Entities/Weapons/Sword.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Entities/Player/playerg.gd" type="Script" id=2]
@@ -6,6 +6,12 @@
 [ext_resource path="res://Common/Stats.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Common/Shaker.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Entities/Weapons/Staff.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Entities/health_pot.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Entities/mana_pot.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Assets/Sounds/feet_17.wav" type="AudioStream" id=9]
+[ext_resource path="res://Assets/Sounds/8bit-sounds/Bubble heavy 1.wav" type="AudioStream" id=10]
+[ext_resource path="res://Assets/Sounds/8bit-sounds/Hit damage 1.wav" type="AudioStream" id=11]
+[ext_resource path="res://Assets/Sounds/8bit-sounds/Suck 2.wav" type="AudioStream" id=12]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.625195
@@ -105,7 +111,55 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=8]
+resource_name = "drink_pot"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Camera/PotionPos:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( -0.011, -0.879189, -0.440516 ), Vector3( -0.011, -0.237, -0.855 ), Vector3( -0.011, -0.132, -0.855 ), Vector3( -0.011, -0.237, -0.855 ), Vector3( -0.011, -0.312, -0.855 ), Vector3( -0.011, -0.237, -0.855 ), Vector3( -0.011, -0.132, -0.855 ), Vector3( -0.011, -0.237, -0.855 ), Vector3( -0.011, -0.312, -0.855 ), Vector3( -0.011, -0.237, -0.855 ), Vector3( -0.011, -0.132, -0.855 ), Vector3( -0.011, -0.237, -0.855 ), Vector3( -0.011, -0.312, -0.855 ), Vector3( -0.011, -0.237, -0.855 ), Vector3( -0.011, -0.237, -0.855 ), Vector3( -0.011, -0.879189, -0.440516 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Camera/PotionPos:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.3, 0.4, 1.5, 1.6, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( -49.757, 0, 0 ), Vector3( 0, 0, 0 ), Vector3( 22.309, 0, 0 ), Vector3( 0, 0, 0 ), Vector3( 0, 0, 0 ), Vector3( -49.757, 0, 0 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.4, 0.8, 1.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "play_drink_sound"
+}, {
+"args": [  ],
+"method": "play_drink_sound"
+}, {
+"args": [  ],
+"method": "play_drink_sound"
+} ]
+}
+
+[sub_resource type="Animation" id=4]
 resource_name = "set_weapon"
 length = 0.3
 tracks/0/type = "value"
@@ -133,21 +187,21 @@ tracks/1/keys = {
 "values": [ Vector3( -32.2838, -56.7623, 39.1814 ), Vector3( 0, -45, 0 ) ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=5]
 length = 0.6
 loop = true
-step = 0.15
+step = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath("Camera:v_offset")
-tracks/0/interp = 1
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.15, 0.3, 0.45, 0.6 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.1, 0.15, 0.3, 0.4, 0.45, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
 "update": 0,
-"values": [ 0.0, 0.1, 0.0, -0.1, 0.0 ]
+"values": [ 0.0, 0.04, 0.05, 0.0, -0.04, -0.05, 0.0 ]
 }
 tracks/1/type = "method"
 tracks/1/path = NodePath("..")
@@ -156,19 +210,22 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.6 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0.15, 0.6 ),
+"transitions": PoolRealArray( 1, 1 ),
 "values": [ {
+"args": [  ],
+"method": "play_step_audio"
+}, {
 "args": [  ],
 "method": "stop_walking_check"
 } ]
 }
 
-[sub_resource type="CapsuleShape" id=5]
+[sub_resource type="CapsuleShape" id=6]
 radius = 0.653884
 height = 0.886429
 
-[sub_resource type="CapsuleMesh" id=6]
+[sub_resource type="CapsuleMesh" id=7]
 radius = 0.565
 
 [node name="Player" type="KinematicBody"]
@@ -189,6 +246,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0 )
 
 [node name="Camera" type="Camera" parent="Head"]
 current = true
+near = 0.1
 
 [node name="HitRay" type="RayCast" parent="Head/Camera"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.178, 0 )
@@ -197,7 +255,10 @@ collision_mask = 16
 collide_with_areas = true
 
 [node name="WeaponPos" type="Position3D" parent="Head/Camera"]
-transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0.55, -0.25, -0.9 )
+transform = Transform( 0.707107, -2.98023e-08, -0.707107, 0.534113, 0.655321, 0.534113, 0.463382, -0.75535, 0.463383, 0.55, -1.0391, -0.388678 )
+
+[node name="meleeHitSound" type="AudioStreamPlayer3D" parent="Head/Camera/WeaponPos"]
+stream = ExtResource( 11 )
 
 [node name="Shaker" parent="Head/Camera" instance=ExtResource( 5 )]
 parent_property = "h_offset"
@@ -206,6 +267,16 @@ amplitude = 0.15
 duration = 0.3
 DAMP_EASING = 0.420448
 
+[node name="PotionPos" type="Position3D" parent="Head/Camera"]
+transform = Transform( 1, 0, 0, 0, 0.646031, 0.763311, 0, -0.763311, 0.646031, -0.011, -0.879189, -0.440516 )
+
+[node name="Health_pot" parent="Head/Camera/PotionPos" instance=ExtResource( 7 )]
+
+[node name="Mana_pot" parent="Head/Camera/PotionPos" instance=ExtResource( 8 )]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer3D" parent="Head/Camera/PotionPos"]
+stream = ExtResource( 10 )
+
 [node name="Timer" type="Timer" parent="Head"]
 one_shot = true
 
@@ -213,20 +284,32 @@ one_shot = true
 playback_speed = 1.7
 anims/MeleeAttack = SubResource( 2 )
 anims/SpellAttack = SubResource( 3 )
-anims/set_weapon = SubResource( 7 )
-anims/walking = SubResource( 4 )
+anims/drink_pot = SubResource( 8 )
+anims/set_weapon = SubResource( 4 )
+anims/walking = SubResource( 5 )
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Head"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.779, 0 )
+stream = ExtResource( 9 )
+
+[node name="Rotation" type="AudioStreamPlayer3D" parent="Head"]
+stream = ExtResource( 12 )
+unit_db = -34.67
+unit_size = 0.1
+max_db = -24.0
+attenuation_filter_db = -27.8
 
 [node name="HurtBox" parent="." instance=ExtResource( 3 )]
 collision_layer = 4
 
 [node name="CollisionShape" parent="HurtBox" index="0"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
 visible = false
-mesh = SubResource( 6 )
+mesh = SubResource( 7 )
 material/0 = null
 
 [node name="RayCast" type="RayCast" parent="."]

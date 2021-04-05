@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/bookPlace3.ogg-1ae245c6ed72600e78a374515bea5091.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/kenney_rpgaudio/Audio/bookPlace3.ogg"
+dest_files=[ "res://.import/bookPlace3.ogg-1ae245c6ed72600e78a374515bea5091.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

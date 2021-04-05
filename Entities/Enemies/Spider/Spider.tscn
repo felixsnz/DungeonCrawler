@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Entities/Enemies/Spider/Spider.gd" type="Script" id=1]
+[ext_resource path="res://Assets/Sounds/8bit-sounds/Hit damage 1.wav" type="AudioStream" id=2]
 [ext_resource path="res://Common/Stats.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Common/HurtBox.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Common/Shaker.tscn" type="PackedScene" id=5]
@@ -119,7 +120,7 @@ max_mana = 1
 [node name="BodyAxis" type="Spatial" parent="."]
 
 [node name="spider" type="MeshInstance" parent="BodyAxis"]
-transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0 )
+transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0.05, 0, 0 )
 mesh = ExtResource( 6 )
 material/0 = null
 material/1 = null
@@ -163,6 +164,11 @@ anims/dead = SubResource( 4 )
 anims/tackle = SubResource( 5 )
 
 [node name="Tween" type="Tween" parent="."]
+
+[node name="damageSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 2 )
+unit_size = 3.0
+area_mask = 15375
 [connection signal="health_changed" from="Stats" to="." method="_on_Stats_health_changed"]
 [connection signal="health_reduced" from="Stats" to="BodyAxis/spider/Shaker" method="_on_shake_requested"]
 [connection signal="no_health" from="Stats" to="." method="_on_Stats_no_health"]

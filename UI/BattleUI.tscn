@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://UI/BattleUI.gd" type="Script" id=1]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://Assets/Textures/nostalig_sword.png" type="Texture" id=6]
 [ext_resource path="res://Resources/theme_styles/normal_btn_style.tres" type="StyleBox" id=7]
 [ext_resource path="res://Assets/Textures/c_weapon_icon.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Sounds/8bit-sounds/Cancel 1.wav" type="AudioStream" id=9]
+[ext_resource path="res://Assets/Sounds/8bit-sounds/Confirm 1.wav" type="AudioStream" id=10]
 
 [node name="BattleUI" type="Control"]
 margin_right = 40.0
@@ -78,6 +80,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="cancel" type="AudioStreamPlayer" parent="ConfirmationDialog"]
+stream = ExtResource( 9 )
+
+[node name="confirm" type="AudioStreamPlayer" parent="ConfirmationDialog"]
+stream = ExtResource( 10 )
+
 [node name="otherWpn" type="Button" parent="."]
 margin_left = 1480.0
 margin_top = 936.0
@@ -107,5 +115,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="button_down" from="AttackBtn" to="." method="_on_AttackBtn_button_down"]
+[connection signal="button_down" from="PotionsBtns/HealthPotBtn" to="." method="_on_HealthPotBtn_button_down"]
+[connection signal="button_down" from="PotionsBtns/ManaPotBtn" to="." method="_on_ManaPotBtn_button_down"]
 [connection signal="confirmed" from="ConfirmationDialog" to="." method="_on_ConfirmationDialog_confirmed"]
+[connection signal="popup_hide" from="ConfirmationDialog" to="." method="_on_ConfirmationDialog_popup_hide"]
 [connection signal="button_down" from="ChangueWpnBtn" to="." method="_on_ChangueWpnBtn_button_down"]

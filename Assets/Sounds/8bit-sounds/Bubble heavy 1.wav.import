@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Bubble heavy 1.wav-815f68a5debc9ce1a760ba5a157d43ea.sample"
+
+[deps]
+
+source_file="res://Assets/Sounds/8bit-sounds/Bubble heavy 1.wav"
+dest_files=[ "res://.import/Bubble heavy 1.wav-815f68a5debc9ce1a760ba5a157d43ea.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

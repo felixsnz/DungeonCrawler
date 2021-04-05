@@ -115,8 +115,8 @@ func generate_dungeon():
 	if debuging_mode:
 		player.changue_camera()
 	
-	generate_enemies(Spider, ind_rooms, 0.02)
-	generate_enemies(cthulhu, ind_rooms, 0.02)
+	generate_enemies(Spider, ind_rooms, 0.03)
+	generate_enemies(cthulhu, ind_rooms, 0.03)
 #	create_instance(Spider, MapTools.random_items(player_room, 1).front() * cell_size \
 #			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)
 

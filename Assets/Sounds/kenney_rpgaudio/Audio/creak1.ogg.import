@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/creak1.ogg-77e6745f36ee6a91cffd8e9f83db41d1.oggstr"
+
+[deps]
+
+source_file="res://Assets/Sounds/kenney_rpgaudio/Audio/creak1.ogg"
+dest_files=[ "res://.import/creak1.ogg-77e6745f36ee6a91cffd8e9f83db41d1.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

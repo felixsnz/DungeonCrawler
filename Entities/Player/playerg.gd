@@ -30,11 +30,13 @@ onready var tween = $Tween
 onready var camera = $Head/Camera
 onready var debug_camera = $debugCamera
 onready var stats = $Stats
+onready var step_audio = $Head/AudioStreamPlayer3D
 
 var speed = 1.5
 
 signal end_turn(final_position)
 signal wpn_changued(old, new)
+signal potion_consumed(pot, new_amount)
 #signal reach_target_movement(position)
 
 var step_direction = Vector3.FORWARD
@@ -46,6 +48,9 @@ export(Array, PackedScene) var weapons = []
 var weapon = null
 var is_on_turn = false
 var enemies_steps_copy = []
+var can_walk = true
+var health_pots = 6
+var mana_pots = 6
 
 func _ready():
 	Global.player = self
@@ -64,6 +69,15 @@ func _ready():
 func _process(_delta):
 	if Input.is_action_just_pressed("c_camera"):
 		changue_camera()
+	if Input.is_action_just_pressed("down"):
+		print("kkkkk")
+		can_walk = not can_walk
+
+func play_step_audio():
+	step_audio.play()
+
+func play_drink_sound():
+	$Head/Camera/PotionPos/AudioStreamPlayer.play()
 
 func _unhandled_input(event):
 	if is_on_turn:
@@ -95,6 +109,24 @@ func attack():
 			yield(animationPlayer, "animation_finished")
 			end_turn(self.translation)
 
+func drink_pot(idx):
+	$Head/Camera/PotionPos.get_child(idx).show()
+	$Head/Camera/PotionPos.get_child(abs(idx - 1)).hide()
+	animationPlayer.play_backwards("set_weapon")
+	yield(animationPlayer, "animation_finished")
+	animationPlayer.play("drink_pot")
+	yield(animationPlayer, "animation_finished")
+	if idx == 0:
+		stats.health += 15
+		health_pots -= 1
+		emit_signal("potion_consumed", "health", health_pots)
+	else:
+		stats.mana += 20
+		mana_pots -= 1
+		emit_signal("potion_consumed", "mana", mana_pots)
+	animationPlayer.play("set_weapon")
+	yield(animationPlayer, "animation_finished")
+	end_turn(self.translation)
 
 func staff_attack():
 	stats.mana -= weapon.mana_cost
@@ -116,7 +148,8 @@ func move(dir_key):
 			tween.interpolate_property(self, "translation", translation, new_translation, \
 			1/speed, Tween.TRANS_LINEAR)
 			tween.start()
-			animationPlayer.play("walking")
+			if can_walk:
+				animationPlayer.play("walking")
 			end_turn(new_translation)
 			dungeon_entities.battle_ui.hide_popup()
 
@@ -140,6 +173,7 @@ func turn_around():
 	.5, Tween.TRANS_SINE, Tween.EASE_OUT)
 	
 	$Tween.start()
+	$Head/Rotation.play()
 	var angle = deg2rad(new_rotation.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle))* -1
 	move_inputs = MathTools.get_directions(step_direction)
@@ -157,6 +191,7 @@ func check_raycast():
 			var obj = collider.get_parent()
 			if obj.is_in_group("enemies"):
 				if has_weapon():
+					$Head/Camera/WeaponPos/meleeHitSound.play()
 					obj.damage(weapon.damage)
 
 func has_weapon() -> bool:

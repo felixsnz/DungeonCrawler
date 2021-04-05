@@ -8,6 +8,7 @@ var vel = Vector3.ZERO
 var direction = Vector3.ZERO
 var speed = .5
 var damage
+var not_impacted = true
 
 signal impacted(obj)
 
@@ -20,8 +21,11 @@ func _ready():
 func _process(delta):
 	vel = direction * speed
 	var collision = move_and_collide(vel)
-	if collision:
+	if collision and not_impacted:
+		not_impacted = false
 		var collider = collision.collider
 		emit_signal("impacted", collider)
+		$AudioStreamPlayer3D.play()
+		yield($AudioStreamPlayer3D, "finished")
 		queue_free()
 		

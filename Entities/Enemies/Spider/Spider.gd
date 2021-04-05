@@ -79,6 +79,7 @@ func check_raycast():
 	if rayCastAttack.is_colliding():
 		var collider = rayCastAttack.get_collider()
 		var obj = collider.get_parent()
+		$damageSound.play()
 		obj.damage(damage)
 
 func end_turn_and_free():
@@ -93,6 +94,7 @@ func disable_movement():
 	hurtBox.get_node("CollisionShape").disabled = true
 
 func damage(amount):
+	
 #	animationPlayer.play("damage_shake")
 	stats.health -= amount
 
@@ -118,7 +120,6 @@ func _on_HurtBox_area_entered(area):
 	
 		stats.health -= posible_spell.damage
 		print(stats.health)
-#		animationPlayer.play("damage_shake")
 		posible_spell.impact(self)
 		
 		
