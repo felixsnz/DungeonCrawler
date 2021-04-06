@@ -35,3 +35,7 @@ func _on_SettingsBtn_button_down():
 
 func _on_MainMenuBtn_button_down():
 	pass # Replace with function body.
+
+
+func _on_Close_Game_button_down():
+	get_tree().quit()

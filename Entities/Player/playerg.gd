@@ -46,7 +46,7 @@ var cell_size = 4
 export(Array, PackedScene) var weapons = []
 
 var weapon = null
-var is_on_turn = false
+var is_on_turn = true
 var enemies_steps_copy = []
 var can_walk = true
 var health_pots = 6

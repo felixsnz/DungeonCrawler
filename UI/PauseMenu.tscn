@@ -52,41 +52,66 @@ custom_icons/close_highlight = SubResource( 2 )
 custom_icons/close = SubResource( 3 )
 custom_styles/panel = SubResource( 1 )
 custom_fonts/title_font = ExtResource( 5 )
-custom_constants/title_height = -107
+custom_constants/title_height = -150
 window_title = "Pause"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ResumeBtn" type="Button" parent="WindowDialog"]
-margin_left = 272.0
-margin_top = 136.0
-margin_right = 576.0
-margin_bottom = 189.0
+[node name="VBoxContainer" type="VBoxContainer" parent="WindowDialog"]
+margin_left = 288.0
+margin_top = 120.0
+margin_right = 558.0
+margin_bottom = 485.0
+custom_constants/separation = 15
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="ResumeBtn" type="Button" parent="WindowDialog/VBoxContainer"]
+margin_right = 270.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 270, 80 )
 theme = ExtResource( 2 )
 text = "Resume"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SettingsBtn" type="Button" parent="WindowDialog"]
-margin_left = 272.0
-margin_top = 231.0
-margin_right = 575.0
-margin_bottom = 284.0
+[node name="SettingsBtn" type="Button" parent="WindowDialog/VBoxContainer"]
+margin_top = 95.0
+margin_right = 270.0
+margin_bottom = 175.0
+rect_min_size = Vector2( 270, 80 )
 theme = ExtResource( 2 )
 text = "Settings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="MainMenuBtn" type="Button" parent="WindowDialog"]
-margin_left = 272.0
-margin_top = 328.0
-margin_right = 575.0
-margin_bottom = 381.0
+[node name="MainMenuBtn" type="Button" parent="WindowDialog/VBoxContainer"]
+margin_top = 190.0
+margin_right = 270.0
+margin_bottom = 270.0
+rect_min_size = Vector2( 270, 80 )
 theme = ExtResource( 2 )
 text = "Main Menu"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="button_down" from="WindowDialog/ResumeBtn" to="." method="_on_ResumeBtn_button_down"]
-[connection signal="button_down" from="WindowDialog/SettingsBtn" to="." method="_on_SettingsBtn_button_down"]
-[connection signal="button_down" from="WindowDialog/MainMenuBtn" to="." method="_on_MainMenuBtn_button_down"]
+
+[node name="Close Game" type="Button" parent="WindowDialog/VBoxContainer"]
+margin_top = 285.0
+margin_right = 270.0
+margin_bottom = 365.0
+rect_min_size = Vector2( 270, 80 )
+theme = ExtResource( 2 )
+text = "Close Game"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="button_down" from="WindowDialog/VBoxContainer/ResumeBtn" to="." method="_on_ResumeBtn_button_down"]
+[connection signal="button_down" from="WindowDialog/VBoxContainer/SettingsBtn" to="." method="_on_SettingsBtn_button_down"]
+[connection signal="button_down" from="WindowDialog/VBoxContainer/MainMenuBtn" to="." method="_on_MainMenuBtn_button_down"]
+[connection signal="button_down" from="WindowDialog/VBoxContainer/Close Game" to="." method="_on_Close_Game_button_down"]

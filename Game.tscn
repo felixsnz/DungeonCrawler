@@ -15,3 +15,4 @@ pause_mode = 2
 stream = ExtResource( 3 )
 volume_db = -18.023
 autoplay = true
+bus = "Music"

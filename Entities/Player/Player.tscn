@@ -111,7 +111,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=4]
 resource_name = "drink_pot"
 length = 2.0
 tracks/0/type = "value"
@@ -159,8 +159,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "set_weapon"
+[sub_resource type="Animation" id=5]
 length = 0.3
 tracks/0/type = "value"
 tracks/0/path = NodePath("Camera/WeaponPos:translation")
@@ -187,7 +186,7 @@ tracks/1/keys = {
 "values": [ Vector3( -32.2838, -56.7623, 39.1814 ), Vector3( 0, -45, 0 ) ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=6]
 length = 0.6
 loop = true
 step = 0.05
@@ -221,11 +220,11 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="CapsuleShape" id=6]
+[sub_resource type="CapsuleShape" id=7]
 radius = 0.653884
 height = 0.886429
 
-[sub_resource type="CapsuleMesh" id=7]
+[sub_resource type="CapsuleMesh" id=8]
 radius = 0.565
 
 [node name="Player" type="KinematicBody"]
@@ -284,9 +283,9 @@ one_shot = true
 playback_speed = 1.7
 anims/MeleeAttack = SubResource( 2 )
 anims/SpellAttack = SubResource( 3 )
-anims/drink_pot = SubResource( 8 )
-anims/set_weapon = SubResource( 4 )
-anims/walking = SubResource( 5 )
+anims/drink_pot = SubResource( 4 )
+anims/set_weapon = SubResource( 5 )
+anims/walking = SubResource( 6 )
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Head"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.779, 0 )
@@ -304,12 +303,12 @@ collision_layer = 4
 
 [node name="CollisionShape" parent="HurtBox" index="0"]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
-shape = SubResource( 6 )
+shape = SubResource( 7 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
 visible = false
-mesh = SubResource( 7 )
+mesh = SubResource( 8 )
 material/0 = null
 
 [node name="RayCast" type="RayCast" parent="."]
