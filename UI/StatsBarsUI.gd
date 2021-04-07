@@ -2,12 +2,6 @@ extends Control
 const dungeon_entities = preload("res://Common/SpriptableClasses/battle_units.tres")
 
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	var player = dungeon_entities.player
 	if player != null:
@@ -25,3 +19,11 @@ func _on_player_stats_health_changued(value):
 
 func _on_player_stats_mana_changued(value):
 	$PlayerManaBar.update_bar(value)
+
+
+func _on_PlayerHealthBar_no_health():
+	print("deletinggggggggggg")
+	get_parent().get_parent().get_node("Control").queue_free()
+	dungeon_entities.player.queue_free()
+	get_parent().get_parent().get_node("DeathScreen").popup()
+	pass # Replace with function body.

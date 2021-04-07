@@ -7,68 +7,69 @@ signal end_turn
 export(bool) var visible_path
 var enemies_steps = {}
 var enemies_to_attack = []
+var enemies_in_turn = []
 signal enemies_steps_list_filled(list)
 
 func _ready():
+	
+	
+	
+	
 	dungeon_entities.enemies = self
 	var player = dungeon_entities.player
 	self.connect("enemies_steps_list_filled", player, "get_enemies_steps")
-	
+
+
+
 func play_turn(player_final_position):
 	var player = dungeon_entities.player
 	if player != null:
 		enemies_steps.clear()
 		fill_enemies_steps_list(player_final_position)
-		reset_move_check_on_enemies()
-		call_enemies_turn(player_final_position)
-		enemies_to_attack.clear()
-		if enemies_can_attack(player_final_position):
-			for enmy in enemies_to_attack:
-				if enmy != null:
-					enmy.try_to_tackle(player, player_final_position)
-					yield(enmy, "has_attacked")
-				else:
-					print("enemy was null")
-			emit_signal("end_turn")
+		if not enemies_in_turn.empty():
+			
+			
+			reset_move_check_on_enemies()
+			
+			call_enemies_turn(player_final_position)
+			enemies_to_attack.clear()
+			if enemies_can_attack(player_final_position):
+				for enmy in enemies_to_attack:
+					if enmy != null:
+						enmy.try_to_tackle(player, player_final_position)
+						yield(enmy, "has_attacked")
+					else:
+						print("enemy was null")
+				emit_signal("end_turn")
+			else:
+				emit_signal("end_turn")
 		else:
 			emit_signal("end_turn")
 
-func get_enemies_to_attack(player_pos):
-	var player = dungeon_entities.player
-	if player != null:
-		for enemy in get_children():
-			var directions = MapTools.get_directions().values()
-			for dir in directions:
-				var rel = (enemy.translation + dir * 4)
-				if player_pos.is_equal_approx(rel):
-					enemies_to_attack.append(enemy)
-
-func enemies_can_attack(player_pos) -> bool:
-	var player = dungeon_entities.player
-	if player != null:
-		for enemy in get_children():
-			var directions = MapTools.get_directions().values()
-			for dir in directions:
-				var rel = (enemy.translation + dir * 4)
-				if player_pos.is_equal_approx(rel):
-					enemies_to_attack.append(enemy)
-		if enemies_to_attack.size() > 0:
-			return true
-		return false
-	else:
-		return false
-
 func fill_enemies_steps_list(target_pos):
-	for enemy in get_children():
+	update_enemies_in_turn()
+	
+	
+	for enemy in enemies_in_turn:
 		add_step_to_enemies_steps(enemy, target_pos)
+	update_enemies_steps()
 	emit_signal("enemies_steps_list_filled", enemies_steps)
 
+func reset_move_check_on_enemies():
+	for enemy in enemies_in_turn:
+		enemy.has_moved = false
+
 func call_enemies_turn(player_final_pos):
-	for enemy in get_children():
+	print("calling enemies in turn")
+	for enemy in enemies_in_turn:
 		var target_step = get_target_step(enemy.translation, player_final_pos)
+		
+		print("from: ", enemy.translation)
+		print("to:", player_final_pos)
 		if target_step != null:
 			enemies_steps.erase(enemy)
 			if target_step in enemies_steps.values():
+				print("enemy target in ther enemies target")
 				var share_step_enemies = []
 				for i in enemies_steps.values().size():
 					if enemies_steps.values()[i] == target_step:
@@ -84,10 +85,42 @@ func call_enemies_turn(player_final_pos):
 				if not enemy.has_moved:
 					enemy.make_step(player_final_pos, target_step)
 					enemy.has_moved = true
+				else:
+					print("enemy has moved")
+		else:
+			print("enemy target is null")
 
-func reset_move_check_on_enemies():
-	for enemy in get_children():
-		enemy.has_moved = false
+func enemies_can_attack(player_pos) -> bool:
+	var player = dungeon_entities.player
+	if player != null:
+		for enemy in enemies_in_turn:
+			var directions = MapTools.get_directions().values()
+			for dir in directions:
+				var rel = (enemy.translation + dir * 4)
+				if player_pos.is_equal_approx(rel):
+					enemies_to_attack.append(enemy)
+		if enemies_to_attack.size() > 0:
+			return true
+		return false
+	else:
+		return false
+
+
+
+func get_enemies_to_attack(player_pos):
+	var player = dungeon_entities.player
+	if player != null:
+		for enemy in enemies_in_turn:
+			var directions = MapTools.get_directions().values()
+			for dir in directions:
+				var rel = (enemy.translation + dir * 4)
+				if player_pos.is_equal_approx(rel):
+					enemies_to_attack.append(enemy)
+
+func update_enemies_steps():
+	for enemy in enemies_steps.keys():
+		if not enemy in enemies_in_turn:
+			enemies_steps.erase(enemy)
 
 func add_step_to_enemies_steps(enemy, target_pos):
 	var target_step = get_target_step(enemy.translation, target_pos)
@@ -96,9 +129,15 @@ func add_step_to_enemies_steps(enemy, target_pos):
 
 func get_target_step(from, to):
 	var path = Global.grid_map.find_path(from, to)
-	if path and path.size() > 1:
-		return path[1]
+	if path:
+		if path.size() > 1:
+			return path[1]
+		else:
+			print("path size is 0 or 1")
+			print(path)
 	else:
+		print("there is no path")
+		print(path)
 		return null
 
 func disable_points(points, disabled = true):
@@ -121,3 +160,41 @@ func clear_path():
 			if mesh.get_surface_material(0).albedo_color == Color.purple:
 				mesh.queue_free()
 
+
+
+func _on_Player_player_enter_a_room(room):
+	for enemy in get_children():
+		var map_enemy_pos = Global.grid_map.world_to_map(enemy.translation)
+		
+		if map_enemy_pos in room:
+			if not enemy in enemies_in_turn:
+				enemies_in_turn.append(enemy)
+
+
+func _on_DungeonGen_enemies_generated():
+	for enmy in get_children():
+		if not enmy.is_connected("dead", self, "_on_enemy_dead"):
+			enmy.connect("dead", self, "_on_enemy_dead")
+		if not enmy.is_connected("damaged", self, "_on_enemy_damaged"):
+			enmy.connect("damaged", self, "_on_enemy_damaged")
+
+func _on_enemy_damaged(enemy):
+	print("enemy damaged")
+	
+	if not enemy in enemies_in_turn:
+		enemies_in_turn.append(enemy)
+		
+	print("the enemies in turn are: ", enemies_in_turn.size())
+
+func update_enemies_in_turn():
+	for enemy in enemies_in_turn:
+		if not enemy.is_inside_tree():
+			enemies_in_turn.erase(enemy)
+
+func _on_enemy_dead(dead_enmy):
+	enemies_in_turn.erase(dead_enmy)
+
+
+func _on_DungeonGen_enemies_deleted():
+	enemies_in_turn.clear()
+	pass # Replace with function body.

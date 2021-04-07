@@ -3,6 +3,9 @@ extends Control
 
 var notPaused = true
 
+func _ready():
+	show()
+
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -30,12 +33,22 @@ func _on_ResumeBtn_button_down():
 
 
 func _on_SettingsBtn_button_down():
+	$WindowDialog/Options.popup()
 	pass # Replace with function body.
 
 
 func _on_MainMenuBtn_button_down():
+	get_tree().change_scene("res://UI/TittleScreen.tscn")
 	pass # Replace with function body.
 
 
 func _on_Close_Game_button_down():
 	get_tree().quit()
+
+
+func _on_WindowDialog_popup_hide():
+	get_tree().paused = false
+	$WindowDialog.hide()
+	$bg.hide()
+	notPaused = true
+	pass # Replace with function body.

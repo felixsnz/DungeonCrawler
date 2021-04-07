@@ -18,7 +18,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	vel = direction * speed
 	var collision = move_and_collide(vel)
 	if collision and not_impacted:

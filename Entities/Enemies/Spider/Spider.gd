@@ -21,6 +21,8 @@ var damage = 1
 var can_dead = true
 
 signal has_attacked
+signal damaged(ref)
+signal dead(ref)
 
 enum STATES {
 	IDLE,
@@ -57,10 +59,17 @@ func make_step(player_pos, target_step):
 		var target_direction = self.translation.direction_to(target_step)
 		rayCastCollide.cast_to = target_direction * cell_size
 		rayCastCollide.force_raycast_update()
-		if !rayCastCollide.is_colliding() and target_step != player_pos:
-			$Tween.interpolate_property(self, "translation", translation, \
-			target_step, .5, Tween.TRANS_SINE, Tween.EASE_OUT)
-			$Tween.start()
+		if !rayCastCollide.is_colliding():
+			if target_step != player_pos:
+				$Tween.interpolate_property(self, "translation", translation, \
+				target_step, .5, Tween.TRANS_SINE, Tween.EASE_OUT)
+				$Tween.start()
+			else:
+				print("target step is player pos")
+		else:
+			print("infront the enemy is colliding")
+	else:
+		print("cant move")
 
 func try_to_tackle(player, player_pos):
 	if player != null:
@@ -87,13 +96,13 @@ func end_turn_and_free():
 	queue_free()
 
 func disable_movement():
-	print("disableado")
 	can_attack = false
 	can_move = false
 	$CollisionShape.disabled = true
 	hurtBox.get_node("CollisionShape").disabled = true
 
-func damage(amount):
+func damage_self(amount):
+	emit_signal("damaged", self)
 	
 #	animationPlayer.play("damage_shake")
 	stats.health -= amount
@@ -106,10 +115,8 @@ func look_at_player():
 	if player != null and can_move:
 		$BodyAxis.look_at(player.global_transform.origin, Vector3.UP)
 
-func _on_Stats_health_changed(value):
-	pass # Replace with function body.
-
 func _on_Stats_no_health():
+	emit_signal("dead", self)
 	animationPlayer.play("dead")
 
 
@@ -119,7 +126,6 @@ func _on_HurtBox_area_entered(area):
 	if posible_spell.is_in_group("spells"):
 	
 		stats.health -= posible_spell.damage
-		print(stats.health)
 		posible_spell.impact(self)
 		
 		

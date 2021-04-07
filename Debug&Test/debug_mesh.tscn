@@ -2,10 +2,10 @@
 
 [sub_resource type="CubeMesh" id=1]
 
-[sub_resource type="SpatialMaterial" id=3]
+[sub_resource type="SpatialMaterial" id=2]
 resource_local_to_scene = true
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=3]
 script/source = "extends MeshInstance
 
 
@@ -27,5 +27,5 @@ func set_color(color):
 "debug_objects",
 ]]
 mesh = SubResource( 1 )
-material/0 = SubResource( 3 )
-script = SubResource( 2 )
+material/0 = SubResource( 2 )
+script = SubResource( 3 )

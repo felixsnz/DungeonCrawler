@@ -105,12 +105,23 @@ func calculate_point_index(point):
 func find_path(world_start, world_end):
 	self.path_start_position = world_to_map(world_start)
 	self.path_end_position = world_to_map(world_end)
+	
+	if not path_start_position in walkable_cells_list:
+		print("start not in walkable")
+	
+	if not path_end_position in walkable_cells_list:
+		print("end not in walkable")
 	_recalculate_path()
 	var path_world = []
 	for point in _point_path:
 		var point_world = map_to_world(point.x, point.y, point.z)
 		point_world.y += 3.5
 		path_world.append(point_world)
+	
+#	for cell in walkable_cells_list:
+#		var dbg = debug_mesh.instance()
+#		dbg.translation = map_to_world(cell.x, cell.y, cell.z) + Vector3(0,6,0)
+#		get_parent().get_node("Entities").add_child(dbg)
 	return path_world
 
 
@@ -119,6 +130,7 @@ func _recalculate_path():
 	var start_point_index = calculate_point_index(path_start_position)
 	var end_point_index = calculate_point_index(path_end_position)
 	_point_path = astar_node.get_point_path(start_point_index, end_point_index)
+	print("the point path size is: ", _point_path.size())
 	if _point_path.size() > 0:
 		_point_path.remove(_point_path.size() -1)
 

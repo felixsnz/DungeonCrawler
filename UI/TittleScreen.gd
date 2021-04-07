@@ -9,6 +9,7 @@ onready var streamPlayer = $AudioStreamPlayer
 var can_focus = true
 
 func _ready():
+	$ColorRect/AnimationPlayer.play_backwards("fade_in")
 	$MenuOptions/NewGame.grab_focus()
 	
 	for btn in $MenuOptions.get_children():
@@ -28,15 +29,34 @@ func _on_btn_clicked():
 
 func _on_Quit_Game_button_down():
 	disable_all()
-	can_focus = false
 	yield(streamPlayer, "finished")
 	get_tree().quit()
 
 func _on_NewGame_button_down():
-	$AnimationPlayer.play("fade_in")
-	yield($AnimationPlayer, "animation_finished")
+	
+	disable_all()
+	$ColorRect/AnimationPlayer.play("fade_in")
+	yield($ColorRect/AnimationPlayer, "animation_finished")
+# warning-ignore:return_value_discarded
 	get_tree().change_scene("res://Game.tscn")
 
 func disable_all():
+	can_focus = false
 	for btn in $MenuOptions.get_children():
 		btn.disabled = true
+
+func enable_all():
+	can_focus = true
+	for btn in $MenuOptions.get_children():
+		btn.disabled = false
+	
+	
+
+func _on_Options_button_down():
+	disable_all()
+	$Options.popup()
+
+
+func _on_Options_popup_hide():
+	enable_all()
+

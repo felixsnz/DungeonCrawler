@@ -5,6 +5,7 @@ const dungeon_entities = preload("res://Common/SpriptableClasses/battle_units.tr
 onready var attack_btn = $AttackBtn
 onready var health_pot_btn = $PotionsBtns/HealthPotBtn
 onready var mana_pot_btn = $PotionsBtns/ManaPotBtn
+onready var level_indicator = $LevelIndicator
 
 var can_disable_health_pot = true
 var can_disable_mana_pot = true
@@ -34,6 +35,9 @@ func _ready():
 	
 	other_wpn.queue_free()
 	wpn.queue_free()
+
+func update_lvl_indicator(value):
+	level_indicator.text = "Level:" + str(value)
 
 func _on_player_pot_consumed(type, new_amount):
 	if type == "health":

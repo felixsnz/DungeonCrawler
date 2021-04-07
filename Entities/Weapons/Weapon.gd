@@ -16,13 +16,10 @@ func _ready():
 	pass
 
 func _on_spell_impacted(obj):
-	print("emitida senial", obj.name)
 	if obj.is_in_group("world_objects"):
-		print("impact on wall")
 		$Timer.start(0.5)
 	elif obj.is_in_group("enemies"):
-		print("es spidersss")
-		obj.damage(damage)
+		obj.damage_self(damage)
 		$Timer.start(0.5)
 
 func cast_spell():

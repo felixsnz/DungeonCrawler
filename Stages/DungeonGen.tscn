@@ -34,7 +34,10 @@ script = ExtResource( 5 )
 
 [node name="Enemies" type="Spatial" parent="Entities"]
 script = ExtResource( 6 )
+[connection signal="enemies_deleted" from="." to="Entities/Enemies" method="_on_DungeonGen_enemies_deleted"]
+[connection signal="enemies_generated" from="." to="Entities/Enemies" method="_on_DungeonGen_enemies_generated"]
 [connection signal="end_turn" from="Entities/Player" to="Entities" method="_on_Player_end_turn"]
+[connection signal="player_enter_a_room" from="Entities/Player" to="Entities/Enemies" method="_on_Player_player_enter_a_room"]
 [connection signal="end_turn" from="Entities/Enemies" to="Entities" method="_on_Enemies_end_turn"]
 
 [editable path="Entities/Player"]

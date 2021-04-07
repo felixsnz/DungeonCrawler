@@ -19,6 +19,9 @@ onready var entities = $Entities
 onready var player = $Entities/Player
 onready var enemies = $Entities/Enemies
 
+signal enemies_generated
+signal enemies_deleted
+
 
 var maps
 var obstcle_counter = 0
@@ -44,10 +47,16 @@ func initiate_level():
 	
 
 func reload_level():
+	$Entities/Enemies.enemies_in_turn.clear()
+	Global.level += 1
 	gridMap.clear()
 	
 	for enemy in get_tree().get_nodes_in_group("enemies"):
 		enemy.queue_free()
+	
+	for obj in get_tree().get_nodes_in_group("debug_objects"):
+		obj.queue_free()
+	emit_signal("enemies_deleted")
 
 	stairs.queue_free()
 	
@@ -78,14 +87,16 @@ func generate_dungeon():
 			gridMap.set_cell_item(location.x, location.y + 2, location.z, 0)
 	for location in maps.walls:
 		gridMap.set_cell_item(location.x, location.y + 1, location.z, 0)
-	for location in maps.walls:
-		gridMap.set_cell_item(location.x, 0, location.z, 2)
-		obstcle_counter +=1
+#	for location in maps.walls:
+#		gridMap.set_cell_item(location.x, 0, location.z, 2)
+#		obstcle_counter +=1
 
 		
 	var ind_rooms = walker.extract_rooms(maps.rooms)
+	Global.ind_rooms = ind_rooms
 		
 	var player_room = walker.get_start_room(ind_rooms)
+	Global.player_room = player_room
 	
 	player_initial_pos = walker.get_room_center(player_room)
 	
@@ -99,7 +110,6 @@ func generate_dungeon():
 	gridMap.astar_node.set_point_disabled(end_room_idx)
 #	var points = gridMap.astar_node.get_points()
 #	for point in points:
-#		print(point)
 #		var dbg = debug_mesh.instance()
 #		var pos = gridMap.astar_node.get_point_position(point)
 #		dbg.translation = gridMap.map_to_world(pos.x, pos.y, pos.z) + Vector3(0,6,0)
@@ -115,21 +125,44 @@ func generate_dungeon():
 	if debuging_mode:
 		player.changue_camera()
 	
-	generate_enemies(Spider, ind_rooms, 0.03)
-	generate_enemies(cthulhu, ind_rooms, 0.03)
+	var ocuppied_positions = generate_enemies(Spider, ind_rooms, 0.1)
+	print("this are the occupied: ", ocuppied_positions)
+	generate_enemies(cthulhu, ind_rooms, 0.1, ocuppied_positions)
+	call_deferred("emit_signal", "enemies_generated")
 #	create_instance(Spider, MapTools.random_items(player_room, 1).front() * cell_size \
 #			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)
 
-func generate_enemies(enemy, ind_rooms, porcentage):
+func generate_enemies(enemy, ind_rooms, porcentage, ignore_positions = null):
+	var total_pos = []
 	for room in ind_rooms:
 		if player_initial_pos in room:
 			continue
 		var n_enemies = round(room.size() * porcentage)
 		room.shuffle()
 		var positions = MapTools.random_items(room, n_enemies, stairs_pos)
+		
 		for position in positions:
-			create_instance(enemy, position * cell_size \
-			+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)
+			total_pos.append(position)
+		print("from inside positions: ", positions)
+		
+#		if ignore_positions != null:
+#			for position in positions:
+#				if position in ignore_positions:
+##					print("copiaaa")
+#					positions.erase(position)
+		for position in positions:
+			if ignore_positions != null:
+				print("there are ignore pos")
+				if not position in ignore_positions:
+					create_instance(enemy, position * cell_size \
+					+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)
+				else:
+					print("copyyyyyyyyyyyyyy")
+			else:
+				create_instance(enemy, position * cell_size \
+					+ Vector3(cell_size/2.0, 3.5, cell_size/2.0), enemies)
+				
+	return total_pos
 #	call_deferred("emit_signal", "enemies_generated")
 
 func create_instance(Obj, trans, parent = null):
@@ -144,12 +177,12 @@ func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.scancode == KEY_0:
 			reload_level()
-		if event.scancode == KEY_1:
-			for location in maps.rooms:
-				gridMap.set_cell_item(location.x, location.y, location.z, 2)
-		if event.scancode == KEY_2:
-			for location in maps.halls:
-				gridMap.set_cell_item(location.x, location.y, location.z, 1)
+#		if event.scancode == KEY_1:
+#			for location in maps.rooms:
+#				gridMap.set_cell_item(location.x, location.y, location.z, 2)
+#		if event.scancode == KEY_2:
+#			for location in maps.halls:
+#				gridMap.set_cell_item(location.x, location.y, location.z, 1)
 
 func place_debug_meshes(map, color):
 	for loc in map:

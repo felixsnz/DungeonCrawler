@@ -114,6 +114,18 @@ expand_icon = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="LevelIndicator" type="Label" parent="."]
+margin_left = 24.0
+margin_top = 144.0
+margin_right = 144.0
+margin_bottom = 173.0
+theme = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 1, 0.560784, 1 )
+text = "Level:1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="button_down" from="AttackBtn" to="." method="_on_AttackBtn_button_down"]
 [connection signal="button_down" from="PotionsBtns/HealthPotBtn" to="." method="_on_HealthPotBtn_button_down"]
 [connection signal="button_down" from="PotionsBtns/ManaPotBtn" to="." method="_on_ManaPotBtn_button_down"]

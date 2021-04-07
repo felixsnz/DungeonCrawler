@@ -13,7 +13,8 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.222, 0 )
 script = ExtResource( 2 )
 Spell = ExtResource( 3 )
 icon = ExtResource( 1 )
-mana_cost = 5
+damage = 2
+mana_cost = 3
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true

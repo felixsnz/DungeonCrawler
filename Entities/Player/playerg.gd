@@ -37,6 +37,7 @@ var speed = 1.5
 signal end_turn(final_position)
 signal wpn_changued(old, new)
 signal potion_consumed(pot, new_amount)
+signal player_enter_a_room(room)
 #signal reach_target_movement(position)
 
 var step_direction = Vector3.FORWARD
@@ -70,7 +71,6 @@ func _process(_delta):
 	if Input.is_action_just_pressed("c_camera"):
 		changue_camera()
 	if Input.is_action_just_pressed("down"):
-		print("kkkkk")
 		can_walk = not can_walk
 
 func play_step_audio():
@@ -111,17 +111,17 @@ func attack():
 
 func drink_pot(idx):
 	$Head/Camera/PotionPos.get_child(idx).show()
-	$Head/Camera/PotionPos.get_child(abs(idx - 1)).hide()
+	$Head/Camera/PotionPos.get_child(abs(int(idx) - 1)).hide()
 	animationPlayer.play_backwards("set_weapon")
 	yield(animationPlayer, "animation_finished")
 	animationPlayer.play("drink_pot")
 	yield(animationPlayer, "animation_finished")
 	if idx == 0:
-		stats.health += 15
+		stats.health += 5
 		health_pots -= 1
 		emit_signal("potion_consumed", "health", health_pots)
 	else:
-		stats.mana += 20
+		stats.mana += 8
 		mana_pots -= 1
 		emit_signal("potion_consumed", "mana", mana_pots)
 	animationPlayer.play("set_weapon")
@@ -144,16 +144,29 @@ func move(dir_key):
 		if new_translation.is_equal_approx(stairs_pos * cell_size \
 	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0)):
 			dungeon_entities.battle_ui.ask_for_next_level()
-		if !wallRayCast.is_colliding() and not new_translation in enemies_steps_copy:
-			tween.interpolate_property(self, "translation", translation, new_translation, \
-			1/speed, Tween.TRANS_LINEAR)
-			tween.start()
-			if can_walk:
-				animationPlayer.play("walking")
-			end_turn(new_translation)
-			dungeon_entities.battle_ui.hide_popup()
+		dungeon_entities.enemies.update_enemies_steps()
+		if !wallRayCast.is_colliding():
+			if not new_translation in dungeon_entities.enemies.enemies_steps:
+				tween.interpolate_property(self, "translation", translation, new_translation, \
+				1/speed, Tween.TRANS_LINEAR)
+				tween.start()
+				if can_walk:
+					animationPlayer.play("walking")
+				var map_player_pos = Global.grid_map.world_to_map(new_translation)
+				if not map_player_pos in Global.player_room:
+					for room in Global.ind_rooms:
+						if map_player_pos in room:
+							Global.player_room = room
+							emit_signal("player_enter_a_room", room)
+				end_turn(new_translation)
+				dungeon_entities.battle_ui.hide_popup()
+			else:
+				print("enemy is infront player")
+		else:
+			print("wall is infront player")
 
 func play_turn():
+	dungeon_entities.enemies.update_enemies_in_turn()
 	is_on_turn = true
 
 
@@ -192,7 +205,7 @@ func check_raycast():
 			if obj.is_in_group("enemies"):
 				if has_weapon():
 					$Head/Camera/WeaponPos/meleeHitSound.play()
-					obj.damage(weapon.damage)
+					obj.damage_self(weapon.damage)
 
 func has_weapon() -> bool:
 	return weapon != null
@@ -220,11 +233,9 @@ func get_player_direction():
 	return Vector3(sin(rotation.y), 0, cos(rotation.y))
 
 func set_weapon(new_weapon = null):
-	print("setting new weapo")
 	if new_weapon != null:
 		if new_weapon.is_in_group("weapons"):
 			if new_weapon is Weapon:
-				print("setting new wapo")
 				weaponPos.add_child(new_weapon)
 				self.weapon = new_weapon
 				animationPlayer.play("set_weapon")
@@ -238,4 +249,4 @@ func changue_camera():
 		debug_camera = false
 
 func _on_Stats_no_health():
-	queue_free()
+	pass

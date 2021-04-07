@@ -60,7 +60,7 @@ func set_shake(value: bool) -> void:
 		$Timer.start()
 
 func _on_shake_requested(values = null):
-	print("shake request")
+#	print("shake request")
 	if values != null:
 		self.amplitude = values.amplitude
 		self.duration = values.duration

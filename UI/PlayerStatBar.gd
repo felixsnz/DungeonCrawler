@@ -29,7 +29,7 @@ export(transition_types) var trans_type
 export(String) var value_type
 
 signal health_changued
-
+signal no_health
 
 
 func initialize(max_val):
@@ -55,6 +55,9 @@ func animate_value(start, end):
 	if end < start:
 		animationPlayer.play("blink_indicator")
 		emit_signal("health_changued", null)
+	yield($Tween,"tween_completed")
+	if $ValueBar.value <= 0:
+		emit_signal("no_health")
 		
 		
 func update_value(value):

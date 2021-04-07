@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Assets/UI/TittleLetters/D.png" type="Texture" id=1]
 [ext_resource path="res://Assets/UI/TittleLetters/n.png" type="Texture" id=2]
@@ -14,6 +14,8 @@
 [ext_resource path="res://Assets/UI/TittleLetters/s.png" type="Texture" id=12]
 [ext_resource path="res://Resources/title_font.tres" type="DynamicFont" id=13]
 [ext_resource path="res://UI/TittleScreen.gd" type="Script" id=14]
+[ext_resource path="res://UI/Optionss.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=16]
 
 [sub_resource type="Animation" id=1]
 resource_name = "default"
@@ -213,8 +215,6 @@ tracks/15/keys = {
 "values": [ Vector2( 220, 0 ), Vector2( 220, 0 ), Vector2( 220, -8 ), Vector2( 220, 0 ) ]
 }
 
-[sub_resource type="StyleBoxEmpty" id=8]
-
 [sub_resource type="StyleBoxEmpty" id=2]
 
 [sub_resource type="StyleBoxEmpty" id=3]
@@ -223,22 +223,23 @@ tracks/15/keys = {
 
 [sub_resource type="StyleBoxEmpty" id=5]
 
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="StyleBoxEmpty" id=7]
+
+[sub_resource type="StyleBoxEmpty" id=8]
+
 [sub_resource type="StyleBoxEmpty" id=9]
 
 [sub_resource type="StyleBoxEmpty" id=10]
 
 [sub_resource type="StyleBoxEmpty" id=11]
 
-[sub_resource type="StyleBoxEmpty" id=12]
-
-[sub_resource type="StyleBoxEmpty" id=6]
-
-[sub_resource type="Animation" id=7]
-resource_name = "fade_in"
+[sub_resource type="Animation" id=12]
 length = 0.6
 step = 0.025
 tracks/0/type = "value"
-tracks/0/path = NodePath("ColorRect:color")
+tracks/0/path = NodePath(".:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -399,41 +400,42 @@ playback_speed = 3.0
 anims/default = SubResource( 1 )
 
 [node name="MenuOptions" type="VBoxContainer" parent="."]
-margin_left = 192.0
+margin_left = 800.0
 margin_top = 706.0
-margin_right = 1728.0
+margin_right = 1190.0
 margin_bottom = 1019.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="NewGame" type="Button" parent="MenuOptions"]
-margin_right = 1536.0
+margin_right = 420.0
 margin_bottom = 61.0
-custom_styles/hover = SubResource( 8 )
-custom_styles/pressed = SubResource( 2 )
-custom_styles/focus = SubResource( 3 )
-custom_styles/disabled = SubResource( 4 )
-custom_styles/normal = SubResource( 5 )
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/focus = SubResource( 4 )
+custom_styles/disabled = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
 custom_fonts/font = ExtResource( 13 )
 custom_colors/font_color_disabled = Color( 1, 1, 0.560784, 1 )
 custom_colors/font_color = Color( 0.439216, 0.501961, 0.156863, 1 )
 custom_colors/font_color_hover = Color( 0.815686, 0.815686, 0.345098, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 0.560784, 1 )
-text = "New Game"
+text = "Start Game"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Continue" type="Button" parent="MenuOptions"]
+visible = false
 margin_top = 65.0
-margin_right = 1536.0
+margin_right = 390.0
 margin_bottom = 126.0
-custom_styles/hover = SubResource( 8 )
-custom_styles/pressed = SubResource( 2 )
-custom_styles/focus = SubResource( 3 )
-custom_styles/disabled = SubResource( 4 )
-custom_styles/normal = SubResource( 5 )
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/focus = SubResource( 4 )
+custom_styles/disabled = SubResource( 5 )
+custom_styles/normal = SubResource( 6 )
 custom_fonts/font = ExtResource( 13 )
 custom_colors/font_color_disabled = Color( 1, 1, 0.560784, 1 )
 custom_colors/font_color = Color( 0.439216, 0.501961, 0.156863, 1 )
@@ -444,40 +446,58 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Settings" type="Button" parent="MenuOptions"]
-margin_top = 130.0
-margin_right = 1536.0
-margin_bottom = 191.0
-custom_styles/hover = SubResource( 8 )
-custom_styles/pressed = SubResource( 2 )
-custom_styles/focus = SubResource( 3 )
-custom_styles/disabled = SubResource( 4 )
-custom_styles/normal = SubResource( 5 )
-custom_fonts/font = ExtResource( 13 )
-custom_colors/font_color_disabled = Color( 1, 1, 0.560784, 1 )
-custom_colors/font_color = Color( 0.439216, 0.501961, 0.156863, 1 )
-custom_colors/font_color_hover = Color( 0.815686, 0.815686, 0.345098, 1 )
-custom_colors/font_color_pressed = Color( 1, 1, 0.560784, 1 )
-text = "Settings"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="QuitGame" type="Button" parent="MenuOptions"]
-margin_top = 195.0
-margin_right = 1536.0
-margin_bottom = 256.0
-custom_styles/hover = SubResource( 9 )
-custom_styles/pressed = SubResource( 10 )
-custom_styles/focus = SubResource( 11 )
-custom_styles/disabled = SubResource( 12 )
+[node name="Options" type="Button" parent="MenuOptions"]
+margin_top = 65.0
+margin_right = 420.0
+margin_bottom = 126.0
+custom_styles/hover = SubResource( 2 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/focus = SubResource( 4 )
+custom_styles/disabled = SubResource( 5 )
 custom_styles/normal = SubResource( 6 )
 custom_fonts/font = ExtResource( 13 )
 custom_colors/font_color_disabled = Color( 1, 1, 0.560784, 1 )
 custom_colors/font_color = Color( 0.439216, 0.501961, 0.156863, 1 )
 custom_colors/font_color_hover = Color( 0.815686, 0.815686, 0.345098, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 0.560784, 1 )
+text = "Options"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QuitGame" type="Button" parent="MenuOptions"]
+margin_top = 130.0
+margin_right = 420.0
+margin_bottom = 191.0
+custom_styles/hover = SubResource( 7 )
+custom_styles/pressed = SubResource( 8 )
+custom_styles/focus = SubResource( 9 )
+custom_styles/disabled = SubResource( 10 )
+custom_styles/normal = SubResource( 11 )
+custom_fonts/font = ExtResource( 13 )
+custom_colors/font_color_disabled = Color( 1, 1, 0.560784, 1 )
+custom_colors/font_color = Color( 0.439216, 0.501961, 0.156863, 1 )
+custom_colors/font_color_hover = Color( 0.815686, 0.815686, 0.345098, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 0.560784, 1 )
 text = "Quit Game"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="Options" parent="." instance=ExtResource( 15 )]
+
+[node name="By" type="Label" parent="."]
+margin_left = 787.94
+margin_top = 970.0
+margin_right = 1171.94
+margin_bottom = 1031.0
+theme = ExtResource( 16 )
+custom_colors/font_color = Color( 0.564706, 0.670588, 0.266667, 1 )
+text = "Version 1.0
+By: Felix Sanchez"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchor_right = 1.0
@@ -488,9 +508,9 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/fade_in = SubResource( 7 )
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
+anims/fade_in = SubResource( 12 )
 [connection signal="button_down" from="MenuOptions/NewGame" to="." method="_on_NewGame_button_down"]
+[connection signal="button_down" from="MenuOptions/Options" to="." method="_on_Options_button_down"]
 [connection signal="button_down" from="MenuOptions/QuitGame" to="." method="_on_Quit_Game_button_down"]
+[connection signal="popup_hide" from="Options" to="." method="_on_Options_popup_hide"]

@@ -1,0 +1,212 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://Resources/pixel_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://Resources/theme_styles/hover_btn_style.tres" type="StyleBox" id=2]
+[ext_resource path="res://Resources/default_theme.tres" type="Theme" id=3]
+[ext_resource path="res://Resources/theme_styles/pressed_btn_style.tres" type="StyleBox" id=4]
+[ext_resource path="res://Resources/title_font.tres" type="DynamicFont" id=5]
+[ext_resource path="res://Assets/Sounds/8bit-sounds/Select 1.wav" type="AudioStream" id=6]
+[ext_resource path="res://Assets/Textures/checked.png" type="Texture" id=7]
+[ext_resource path="res://Assets/UI/plus-icon.png" type="Texture" id=8]
+[ext_resource path="res://Assets/UI/h-plus-icon.png" type="Texture" id=9]
+[ext_resource path="res://Assets/UI/minus-icon.png" type="Texture" id=10]
+[ext_resource path="res://UI/WindowOptions.gd" type="Script" id=11]
+[ext_resource path="res://UI/HScrollBar.gd" type="Script" id=12]
+[ext_resource path="res://Assets/Textures/x_close.png" type="Texture" id=13]
+[ext_resource path="res://Assets/UI/h_minus-icon.png" type="Texture" id=14]
+[ext_resource path="res://Resources/theme_styles/normal_btn_style.tres" type="StyleBox" id=15]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[node name="Options" type="WindowDialog"]
+margin_left = 400.0
+margin_top = 232.0
+margin_right = 1520.0
+margin_bottom = 856.0
+theme = ExtResource( 3 )
+custom_fonts/title_font = ExtResource( 5 )
+custom_colors/title_color = Color( 0.439216, 0.501961, 0.156863, 1 )
+custom_constants/title_height = -107
+window_title = "Options"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+margin_left = 100.0
+margin_top = 169.0
+margin_right = 40.0
+margin_bottom = 40.0
+custom_constants/separation = 69
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WindowOptions" type="VBoxContainer" parent="MainContainer"]
+margin_right = 378.0
+margin_bottom = 53.0
+custom_constants/separation = 6
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="FullscreenOpt" type="HBoxContainer" parent="MainContainer/WindowOptions"]
+margin_right = 378.0
+margin_bottom = 53.0
+custom_constants/separation = 66
+
+[node name="Label" type="Label" parent="MainContainer/WindowOptions/FullscreenOpt"]
+margin_top = 5.0
+margin_right = 252.0
+margin_bottom = 48.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.439216, 0.501961, 0.156863, 1 )
+custom_colors/font_outline_modulate = Color( 0.160784, 0.207843, 0.0235294, 1 )
+text = "FullScreen"
+
+[node name="FullsCheck" type="CheckBox" parent="MainContainer/WindowOptions/FullscreenOpt"]
+margin_left = 318.0
+margin_right = 366.0
+margin_bottom = 53.0
+custom_icons/checked = ExtResource( 7 )
+custom_icons/unchecked = ExtResource( 13 )
+custom_styles/hover = ExtResource( 2 )
+custom_styles/pressed = ExtResource( 4 )
+custom_styles/focus = SubResource( 1 )
+custom_styles/disabled = ExtResource( 4 )
+custom_styles/hover_pressed = ExtResource( 2 )
+custom_styles/normal = ExtResource( 15 )
+
+[node name="Control" type="VBoxContainer" parent="MainContainer"]
+margin_top = 122.0
+margin_right = 378.0
+margin_bottom = 307.0
+custom_constants/separation = 28
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Master" type="Label" parent="MainContainer/Control"]
+margin_right = 378.0
+margin_bottom = 43.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.439216, 0.501961, 0.156863, 1 )
+custom_colors/font_outline_modulate = Color( 0.160784, 0.207843, 0.0235294, 1 )
+text = "Master Volume"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="MainContainer/Control/Master"]
+stream = ExtResource( 6 )
+
+[node name="HScrollBar" type="HScrollBar" parent="MainContainer/Control/Master"]
+margin_left = 400.0
+margin_right = 639.0
+margin_bottom = 21.0
+rect_scale = Vector2( 2, 2 )
+custom_icons/increment_highlight = ExtResource( 9 )
+custom_icons/increment = ExtResource( 8 )
+custom_icons/decrement_highlight = ExtResource( 14 )
+custom_icons/decrement = ExtResource( 10 )
+custom_styles/grabber_highlight = ExtResource( 4 )
+custom_styles/grabber = ExtResource( 2 )
+custom_styles/scroll_focus = ExtResource( 2 )
+custom_styles/scroll = ExtResource( 15 )
+custom_styles/grabber_pressed = ExtResource( 4 )
+min_value = -80.0
+max_value = 5.0
+step = 5.0
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Music" type="Label" parent="MainContainer/Control"]
+margin_top = 71.0
+margin_right = 378.0
+margin_bottom = 114.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.439216, 0.501961, 0.156863, 1 )
+custom_colors/font_outline_modulate = Color( 0.160784, 0.207843, 0.0235294, 1 )
+text = "Music Volume"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="MainContainer/Control/Music"]
+stream = ExtResource( 6 )
+bus = "Music"
+
+[node name="HScrollBar" type="HScrollBar" parent="MainContainer/Control/Music"]
+margin_left = 400.0
+margin_right = 639.0
+margin_bottom = 21.0
+rect_scale = Vector2( 2, 2 )
+custom_icons/increment_highlight = ExtResource( 9 )
+custom_icons/increment = ExtResource( 8 )
+custom_icons/decrement_highlight = ExtResource( 14 )
+custom_icons/decrement = ExtResource( 10 )
+custom_styles/grabber_highlight = ExtResource( 4 )
+custom_styles/grabber = ExtResource( 2 )
+custom_styles/scroll_focus = ExtResource( 2 )
+custom_styles/scroll = ExtResource( 15 )
+custom_styles/grabber_pressed = ExtResource( 4 )
+min_value = -80.0
+max_value = 5.0
+step = 5.0
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sound" type="Label" parent="MainContainer/Control"]
+margin_top = 142.0
+margin_right = 378.0
+margin_bottom = 185.0
+custom_fonts/font = ExtResource( 1 )
+custom_colors/font_color = Color( 0.439216, 0.501961, 0.156863, 1 )
+custom_colors/font_outline_modulate = Color( 0.160784, 0.207843, 0.0235294, 1 )
+text = "Sound Volume"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="MainContainer/Control/Sound"]
+stream = ExtResource( 6 )
+bus = "Sound"
+
+[node name="HScrollBar" type="HScrollBar" parent="MainContainer/Control/Sound"]
+margin_left = 400.0
+margin_right = 639.0
+margin_bottom = 21.0
+rect_scale = Vector2( 2, 2 )
+custom_icons/increment_highlight = ExtResource( 9 )
+custom_icons/increment = ExtResource( 8 )
+custom_icons/decrement_highlight = ExtResource( 14 )
+custom_icons/decrement = ExtResource( 10 )
+custom_styles/grabber_highlight = ExtResource( 4 )
+custom_styles/grabber = ExtResource( 2 )
+custom_styles/scroll_focus = ExtResource( 2 )
+custom_styles/scroll = ExtResource( 15 )
+custom_styles/grabber_pressed = ExtResource( 4 )
+min_value = -80.0
+max_value = 5.0
+step = 5.0
+script = ExtResource( 12 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Back" type="Button" parent="."]
+margin_left = 960.841
+margin_top = 540.185
+margin_right = 1086.84
+margin_bottom = 593.185
+theme = ExtResource( 3 )
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="button_up" from="MainContainer/WindowOptions/FullscreenOpt/FullsCheck" to="MainContainer/WindowOptions" method="_on_FullsCheck_button_up"]
+[connection signal="scrolling" from="MainContainer/Control/Master/HScrollBar" to="MainContainer/Control/Master/HScrollBar" method="_on_HScrollBar_scrolling"]
+[connection signal="value_changed" from="MainContainer/Control/Master/HScrollBar" to="MainContainer/Control/Master/HScrollBar" method="_on_HScrollBar_value_changed"]
+[connection signal="scrolling" from="MainContainer/Control/Music/HScrollBar" to="MainContainer/Control/Music/HScrollBar" method="_on_HScrollBar_scrolling"]
+[connection signal="value_changed" from="MainContainer/Control/Music/HScrollBar" to="MainContainer/Control/Music/HScrollBar" method="_on_HScrollBar_value_changed"]
+[connection signal="scrolling" from="MainContainer/Control/Sound/HScrollBar" to="MainContainer/Control/Sound/HScrollBar" method="_on_HScrollBar_scrolling"]
+[connection signal="value_changed" from="MainContainer/Control/Sound/HScrollBar" to="MainContainer/Control/Sound/HScrollBar" method="_on_HScrollBar_value_changed"]
+[connection signal="button_down" from="Back" to="MainContainer/WindowOptions" method="_on_Back_button_down"]

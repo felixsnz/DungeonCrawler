@@ -233,8 +233,8 @@ script = ExtResource( 2 )
 weapons = [ ExtResource( 1 ), ExtResource( 6 ) ]
 
 [node name="Stats" parent="." instance=ExtResource( 4 )]
-max_health = 30
-max_mana = 200
+max_health = 20
+max_mana = 50
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )
@@ -258,6 +258,7 @@ transform = Transform( 0.707107, -2.98023e-08, -0.707107, 0.534113, 0.655321, 0.
 
 [node name="meleeHitSound" type="AudioStreamPlayer3D" parent="Head/Camera/WeaponPos"]
 stream = ExtResource( 11 )
+bus = "Sound"
 
 [node name="Shaker" parent="Head/Camera" instance=ExtResource( 5 )]
 parent_property = "h_offset"
@@ -275,6 +276,7 @@ transform = Transform( 1, 0, 0, 0, 0.646031, 0.763311, 0, -0.763311, 0.646031, -
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer3D" parent="Head/Camera/PotionPos"]
 stream = ExtResource( 10 )
+bus = "Sound"
 
 [node name="Timer" type="Timer" parent="Head"]
 one_shot = true
@@ -290,12 +292,14 @@ anims/walking = SubResource( 6 )
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Head"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.779, 0 )
 stream = ExtResource( 9 )
+bus = "Sound"
 
 [node name="Rotation" type="AudioStreamPlayer3D" parent="Head"]
 stream = ExtResource( 12 )
 unit_db = -34.67
 unit_size = 0.1
 max_db = -24.0
+bus = "Sound"
 attenuation_filter_db = -27.8
 
 [node name="HurtBox" parent="." instance=ExtResource( 3 )]

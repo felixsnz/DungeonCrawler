@@ -169,7 +169,6 @@ anims/tackle = SubResource( 5 )
 stream = ExtResource( 2 )
 unit_size = 3.0
 area_mask = 15375
-[connection signal="health_changed" from="Stats" to="." method="_on_Stats_health_changed"]
 [connection signal="health_reduced" from="Stats" to="BodyAxis/spider/Shaker" method="_on_shake_requested"]
 [connection signal="no_health" from="Stats" to="." method="_on_Stats_no_health"]
 [connection signal="area_entered" from="HurtBox" to="." method="_on_HurtBox_area_entered"]
