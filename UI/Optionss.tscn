@@ -152,6 +152,7 @@ custom_styles/grabber_pressed = ExtResource( 4 )
 min_value = -80.0
 max_value = 5.0
 step = 5.0
+value = -30.0
 script = ExtResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -202,7 +203,7 @@ text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="button_up" from="MainContainer/WindowOptions/FullscreenOpt/FullsCheck" to="MainContainer/WindowOptions" method="_on_FullsCheck_button_up"]
+[connection signal="pressed" from="MainContainer/WindowOptions/FullscreenOpt/FullsCheck" to="MainContainer/WindowOptions" method="_on_FullsCheck_pressed"]
 [connection signal="scrolling" from="MainContainer/Control/Master/HScrollBar" to="MainContainer/Control/Master/HScrollBar" method="_on_HScrollBar_scrolling"]
 [connection signal="value_changed" from="MainContainer/Control/Master/HScrollBar" to="MainContainer/Control/Master/HScrollBar" method="_on_HScrollBar_value_changed"]
 [connection signal="scrolling" from="MainContainer/Control/Music/HScrollBar" to="MainContainer/Control/Music/HScrollBar" method="_on_HScrollBar_scrolling"]

@@ -33,7 +33,8 @@ func _on_ResumeBtn_button_down():
 
 
 func _on_SettingsBtn_button_down():
-	$WindowDialog/Options.popup()
+	$WindowDialog/Options.popup_centered()
+#	$WindowDialog/Options.
 	pass # Replace with function body.
 
 

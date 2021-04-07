@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://UI/PauseMenu.tscn" type="PackedScene" id=1]
 [ext_resource path="res://UI/StatsBarsUI.tscn" type="PackedScene" id=2]
@@ -6,12 +6,21 @@
 [ext_resource path="res://UI/DeathScreen.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=5]
 [ext_resource path="res://UI/AcceptDialog.gd" type="Script" id=6]
+[ext_resource path="res://Resources/PixelRPG.ttf" type="DynamicFontData" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+resource_local_to_scene = true
+size = 42
+outline_size = 1
+outline_color = Color( 0.0941176, 0.12549, 0.00784314, 1 )
+font_data = ExtResource( 7 )
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
 [node name="Control" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -22,16 +31,28 @@ mouse_filter = 2
 [node name="BattleUI" parent="Control" instance=ExtResource( 3 )]
 
 [node name="PauseMenu" parent="Control" instance=ExtResource( 1 )]
-visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 0.0
+margin_bottom = 0.0
+mouse_filter = 2
+
+[node name="WindowDialog" parent="Control/PauseMenu" index="1"]
+custom_fonts/title_font = SubResource( 1 )
+
+[node name="Options" parent="Control/PauseMenu/WindowDialog" index="2"]
+visible = true
 
 [node name="DeathScreen" parent="." instance=ExtResource( 4 )]
+visible = false
+mouse_filter = 1
 
 [node name="AcceptDialog" type="AcceptDialog" parent="."]
-visible = true
 margin_left = 530.0
 margin_top = 403.0
 margin_right = 1435.0
 margin_bottom = 634.0
+mouse_filter = 1
 theme = ExtResource( 5 )
 window_title = ""
 dialog_text = "
@@ -48,6 +69,7 @@ margin_left = 530.0
 margin_top = 403.0
 margin_right = 1435.0
 margin_bottom = 634.0
+mouse_filter = 1
 theme = ExtResource( 5 )
 window_title = ""
 dialog_text = "
@@ -58,3 +80,5 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 [connection signal="popup_hide" from="AcceptDialog" to="AcceptDialog" method="_on_AcceptDialog_popup_hide"]
+
+[editable path="Control/PauseMenu"]

@@ -17,7 +17,7 @@ const static_directions = {
 var has_moved = false
 var can_move = true
 var can_attack = true
-var damage = 1
+export(int) var damage = 1
 var can_dead = true
 
 signal has_attacked
@@ -65,11 +65,14 @@ func make_step(player_pos, target_step):
 				target_step, .5, Tween.TRANS_SINE, Tween.EASE_OUT)
 				$Tween.start()
 			else:
-				print("target step is player pos")
+				pass
+#				print("target step is player pos")
 		else:
-			print("infront the enemy is colliding")
+			pass
+#			print("infront the enemy is colliding")
 	else:
-		print("cant move")
+		pass
+#		print("cant move")
 
 func try_to_tackle(player, player_pos):
 	if player != null:

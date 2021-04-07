@@ -1,6 +1,7 @@
 extends Control
 const dungeon_entities = preload("res://Common/SpriptableClasses/battle_units.tres")
 
+var can_end = true
 
 func _ready():
 	var player = dungeon_entities.player
@@ -22,8 +23,19 @@ func _on_player_stats_mana_changued(value):
 
 
 func _on_PlayerHealthBar_no_health():
-	print("deletinggggggggggg")
-	get_parent().get_parent().get_node("Control").queue_free()
-	dungeon_entities.player.queue_free()
-	get_parent().get_parent().get_node("DeathScreen").popup()
-	pass # Replace with function body.
+	if can_end:
+		
+		get_parent().get_parent().get_node("Control").queue_free()
+		dungeon_entities.player.queue_free()
+		get_parent().get_parent().get_node("DeathScreen").popup()
+		can_end = false
+
+
+func _on_ValueBar_value_changed(value):
+	
+	if value <= 0 and can_end:
+		
+		get_parent().get_parent().get_node("Control").queue_free()
+		dungeon_entities.player.queue_free()
+		get_parent().get_parent().get_node("DeathScreen").popup()
+		can_end = false

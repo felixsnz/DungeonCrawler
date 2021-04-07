@@ -18,11 +18,12 @@ func _ready():
 #	add_ready_map(walkable_cells_list)
 #	astar_connect_walkable_cells(walkable_cells_list)
 
-func initiate():
+func initiate(maps):
 	Global.grid_map = self
-	walkable_cells_list = Global.maps.all
+	walkable_cells_list = maps.all
 	add_ready_map(walkable_cells_list)
 	astar_connect_walkable_cells(walkable_cells_list)
+	
 #	var walkable_cells_list = astar_add_walkable_cells(obstacles)
 #	var walkable_cells_list = Global.maps.all
 #	add_ready_map(walkable_cells_list)
@@ -31,6 +32,7 @@ func initiate():
 #	call_deferred("place_debug_meshes", obstacles, Color.red)
 	
 func add_ready_map(map):
+	astar_node.clear()
 	for loc in map:
 		var point_index = calculate_point_index(loc)
 		astar_node.add_point(point_index, loc)
@@ -105,12 +107,6 @@ func calculate_point_index(point):
 func find_path(world_start, world_end):
 	self.path_start_position = world_to_map(world_start)
 	self.path_end_position = world_to_map(world_end)
-	
-	if not path_start_position in walkable_cells_list:
-		print("start not in walkable")
-	
-	if not path_end_position in walkable_cells_list:
-		print("end not in walkable")
 	_recalculate_path()
 	var path_world = []
 	for point in _point_path:
@@ -118,10 +114,7 @@ func find_path(world_start, world_end):
 		point_world.y += 3.5
 		path_world.append(point_world)
 	
-#	for cell in walkable_cells_list:
-#		var dbg = debug_mesh.instance()
-#		dbg.translation = map_to_world(cell.x, cell.y, cell.z) + Vector3(0,6,0)
-#		get_parent().get_node("Entities").add_child(dbg)
+	
 	return path_world
 
 
@@ -130,11 +123,9 @@ func _recalculate_path():
 	var start_point_index = calculate_point_index(path_start_position)
 	var end_point_index = calculate_point_index(path_end_position)
 	_point_path = astar_node.get_point_path(start_point_index, end_point_index)
-	print("the point path size is: ", _point_path.size())
 	if _point_path.size() > 0:
 		_point_path.remove(_point_path.size() -1)
 
-# Setters for the start and end path values.
 func _set_path_start_position(value):
 	if not value in walkable_cells_list:
 		return

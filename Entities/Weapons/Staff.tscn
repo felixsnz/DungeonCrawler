@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/Textures/nostalig_staff_icon.png" type="Texture" id=1]
 [ext_resource path="res://Entities/Weapons/Weapon.gd" type="Script" id=2]
 [ext_resource path="res://Entities/FireBall2.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/Models/nostalig_staff_icon.obj" type="ArrayMesh" id=4]
+[ext_resource path="res://Assets/Sounds/magic_123.wav" type="AudioStream" id=5]
 
 [node name="Staff" type="Spatial" groups=[
 "staffs",
@@ -26,4 +27,8 @@ material/0 = null
 material/1 = null
 material/2 = null
 material/3 = null
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource( 5 )
+unit_size = 0.1
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

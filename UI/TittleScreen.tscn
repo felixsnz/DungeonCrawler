@@ -16,6 +16,7 @@
 [ext_resource path="res://UI/TittleScreen.gd" type="Script" id=14]
 [ext_resource path="res://UI/Optionss.tscn" type="PackedScene" id=15]
 [ext_resource path="res://Resources/default_theme.tres" type="Theme" id=16]
+[ext_resource path="res://Common/fade.tscn" type="PackedScene" id=17]
 
 [sub_resource type="Animation" id=1]
 resource_name = "default"
@@ -235,22 +236,6 @@ tracks/15/keys = {
 
 [sub_resource type="StyleBoxEmpty" id=11]
 
-[sub_resource type="Animation" id=12]
-length = 0.6
-step = 0.025
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5, 0.6 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
-"update": 0,
-"values": [ Color( 0, 0, 0, 0 ), Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 1 ) ]
-}
-
 [node name="TittleScreen" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -261,7 +246,7 @@ __meta__ = {
 
 [node name="DungeonFirstBorn" type="VBoxContainer" parent="."]
 margin_left = 319.0
-margin_top = 182.0
+margin_top = 210.0
 margin_right = 841.0
 margin_bottom = 408.0
 rect_scale = Vector2( 2, 2 )
@@ -499,17 +484,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ColorRect" type="ColorRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-color = Color( 0, 0, 0, 0 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
-anims/fade_in = SubResource( 12 )
+[node name="ColorRect" parent="." instance=ExtResource( 17 )]
 [connection signal="button_down" from="MenuOptions/NewGame" to="." method="_on_NewGame_button_down"]
 [connection signal="button_down" from="MenuOptions/Options" to="." method="_on_Options_button_down"]
 [connection signal="button_down" from="MenuOptions/QuitGame" to="." method="_on_Quit_Game_button_down"]

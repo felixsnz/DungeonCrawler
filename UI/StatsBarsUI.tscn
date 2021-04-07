@@ -23,6 +23,7 @@ margin_bottom = 64.0
 trans_type = 7
 value_type = "Ap"
 [connection signal="no_health" from="PlayerHealthBar" to="." method="_on_PlayerHealthBar_no_health"]
+[connection signal="value_changed" from="PlayerHealthBar/ValueBar" to="." method="_on_ValueBar_value_changed"]
 
 [editable path="PlayerHealthBar"]
 

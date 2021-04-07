@@ -25,16 +25,19 @@ func _ready():
 	
 	player.connect("wpn_changued", self, "_on_player_wpn_changued")
 	player.connect("potion_consumed", self, "_on_player_pot_consumed")
-	
-	
-	
 	var other_wpn = player.weapons.back().instance()
 	var wpn = player.weapons.front().instance()
-	
 	_on_player_wpn_changued(other_wpn, wpn)
-	
 	other_wpn.queue_free()
 	wpn.queue_free()
+
+#func _process(delta):
+#	pass
+#	if dungeon_entities.player.animationPlayer.is_playing():
+#		$ChangueWpnBtn.disabled = true
+#	else:
+#		$ChangueWpnBtn.disabled = false
+
 
 func update_lvl_indicator(value):
 	level_indicator.text = "Level:" + str(value)
@@ -77,8 +80,16 @@ func hide_popup():
 func _on_AttackBtn_button_down():
 	var player = dungeon_entities.player
 	if player != null:
-		disable()
-		player.attack()
+		if player.weapon.is_in_group("staffs"):
+			if player.stats.mana >= player.weapon.mana_cost:
+				disable()
+				player.attack()
+			else:
+				pass
+		else:
+			disable()
+			player.attack()
+			
 
 func disable(disable = true):
 	if can_disable_health_pot:
@@ -86,7 +97,8 @@ func disable(disable = true):
 	attack_btn.disabled = disable
 	if can_disable_mana_pot:
 		mana_pot_btn.disabled = disable
-	
+
+
 
 
 func _on_ConfirmationDialog_confirmed():

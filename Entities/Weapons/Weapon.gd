@@ -23,6 +23,7 @@ func _on_spell_impacted(obj):
 		$Timer.start(0.5)
 
 func cast_spell():
+	$AudioStreamPlayer3D.play()
 	var player = dungeon_entities.player
 	var spell = Spell.instance()
 	spell.connect("impacted", self, "_on_spell_impacted")

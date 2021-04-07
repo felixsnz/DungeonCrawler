@@ -1,5 +1,7 @@
 extends KinematicBody
 
+var explo = preload("res://Entities/explosion.tscn")
+
 
 # Declare member variables here. Examples:
 # var a = 2
@@ -22,6 +24,9 @@ func _process(_delta):
 	vel = direction * speed
 	var collision = move_and_collide(vel)
 	if collision and not_impacted:
+		var expl = explo.instance()
+		expl.translation = self.translation
+		get_tree().current_scene.add_child(expl)
 		not_impacted = false
 		var collider = collision.collider
 		emit_signal("impacted", collider)

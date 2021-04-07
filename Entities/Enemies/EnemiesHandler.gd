@@ -39,7 +39,8 @@ func play_turn(player_final_position):
 						enmy.try_to_tackle(player, player_final_position)
 						yield(enmy, "has_attacked")
 					else:
-						print("enemy was null")
+						pass
+#						print("enemy was null")
 				emit_signal("end_turn")
 			else:
 				emit_signal("end_turn")
@@ -60,16 +61,14 @@ func reset_move_check_on_enemies():
 		enemy.has_moved = false
 
 func call_enemies_turn(player_final_pos):
-	print("calling enemies in turn")
+
 	for enemy in enemies_in_turn:
 		var target_step = get_target_step(enemy.translation, player_final_pos)
-		
-		print("from: ", enemy.translation)
-		print("to:", player_final_pos)
+
 		if target_step != null:
 			enemies_steps.erase(enemy)
 			if target_step in enemies_steps.values():
-				print("enemy target in ther enemies target")
+		
 				var share_step_enemies = []
 				for i in enemies_steps.values().size():
 					if enemies_steps.values()[i] == target_step:
@@ -86,9 +85,11 @@ func call_enemies_turn(player_final_pos):
 					enemy.make_step(player_final_pos, target_step)
 					enemy.has_moved = true
 				else:
-					print("enemy has moved")
+					pass
+#					print("enemy has moved")
 		else:
-			print("enemy target is null")
+			pass
+#			print("enemy target is null")
 
 func enemies_can_attack(player_pos) -> bool:
 	var player = dungeon_entities.player
@@ -133,11 +134,11 @@ func get_target_step(from, to):
 		if path.size() > 1:
 			return path[1]
 		else:
-			print("path size is 0 or 1")
-			print(path)
+			pass
+
+
 	else:
-		print("there is no path")
-		print(path)
+
 		return null
 
 func disable_points(points, disabled = true):
@@ -179,16 +180,17 @@ func _on_DungeonGen_enemies_generated():
 			enmy.connect("damaged", self, "_on_enemy_damaged")
 
 func _on_enemy_damaged(enemy):
-	print("enemy damaged")
 	
 	if not enemy in enemies_in_turn:
 		enemies_in_turn.append(enemy)
 		
-	print("the enemies in turn are: ", enemies_in_turn.size())
 
 func update_enemies_in_turn():
 	for enemy in enemies_in_turn:
-		if not enemy.is_inside_tree():
+		if enemy != null:
+			if not enemy.is_inside_tree():
+				enemies_in_turn.erase(enemy)
+		else:
 			enemies_in_turn.erase(enemy)
 
 func _on_enemy_dead(dead_enmy):
