@@ -35,4 +35,5 @@ func _on_DeathScreen_popup_hide():
 
 
 func _on_DeathScreen_about_to_show():
-	$Label.text = "You Reached Level " + str(Global.level)
+	$Label.text = "You Reached floor " + str(Global._floor)
+	Global._floor = 0

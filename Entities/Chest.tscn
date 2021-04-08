@@ -10,6 +10,7 @@ extents = Vector3( 1.3321, 0.945446, 1 )
 
 [node name="StaticBody" type="StaticBody" groups=[
 "chests",
+"world_objects",
 ]]
 collision_layer = 32
 collision_mask = 0

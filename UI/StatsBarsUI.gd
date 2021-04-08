@@ -39,3 +39,7 @@ func _on_ValueBar_value_changed(value):
 		dungeon_entities.player.queue_free()
 		get_parent().get_parent().get_node("DeathScreen").popup()
 		can_end = false
+
+
+func _on_AcceptDialog_about_to_show():
+	pass # Replace with function body.

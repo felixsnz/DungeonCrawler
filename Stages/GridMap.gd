@@ -122,9 +122,10 @@ func find_path(world_start, world_end):
 func _recalculate_path():
 	var start_point_index = calculate_point_index(path_start_position)
 	var end_point_index = calculate_point_index(path_end_position)
-	_point_path = astar_node.get_point_path(start_point_index, end_point_index)
-	if _point_path.size() > 0:
-		_point_path.remove(_point_path.size() -1)
+	if astar_node.has_point(end_point_index):
+		_point_path = astar_node.get_point_path(start_point_index, end_point_index)
+		if _point_path.size() > 0:
+			_point_path.remove(_point_path.size() -1)
 
 func _set_path_start_position(value):
 	if not value in walkable_cells_list:

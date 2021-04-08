@@ -40,14 +40,19 @@ mouse_filter = 2
 [node name="WindowDialog" parent="Control/PauseMenu" index="1"]
 custom_fonts/title_font = SubResource( 1 )
 
-[node name="Options" parent="Control/PauseMenu/WindowDialog" index="2"]
-visible = true
-
 [node name="DeathScreen" parent="." instance=ExtResource( 4 )]
 visible = false
 mouse_filter = 1
 
-[node name="AcceptDialog" type="AcceptDialog" parent="."]
+[node name="Instructions" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Moving" type="AcceptDialog" parent="Instructions"]
 margin_left = 530.0
 margin_top = 403.0
 margin_right = 1435.0
@@ -59,12 +64,11 @@ dialog_text = "
 Use W, A, S, D to move
 
 and Q, E to turn left and right"
-script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AcceptDialog2" type="AcceptDialog" parent="."]
+[node name="Rotating" type="AcceptDialog" parent="Instructions"]
 margin_left = 530.0
 margin_top = 403.0
 margin_right = 1435.0
@@ -75,10 +79,13 @@ window_title = ""
 dialog_text = "
 Find the stairs to advance 
 
-to the next level"
+to the next floor"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="popup_hide" from="AcceptDialog" to="AcceptDialog" method="_on_AcceptDialog_popup_hide"]
+[connection signal="about_to_show" from="Instructions/Moving" to="Instructions" method="_on_Moving_about_to_show"]
+[connection signal="popup_hide" from="Instructions/Moving" to="Instructions" method="_on_Moving_popup_hide"]
+[connection signal="about_to_show" from="Instructions/Rotating" to="Instructions" method="_on_Rotating_about_to_show"]
+[connection signal="popup_hide" from="Instructions/Rotating" to="Instructions" method="_on_Rotating_popup_hide"]
 
 [editable path="Control/PauseMenu"]

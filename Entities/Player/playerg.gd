@@ -69,9 +69,6 @@ func _ready():
 	debug_camera.current = false
 	set_weapon(weapons.front().instance())
 	
-#	if weapon.is_in_group("staffs"):
-#		connect_weapon_end_turn_signal()
-	
 	var angle = deg2rad(rotation_degrees.y)
 	step_direction = Vector3(sin(angle), 0, cos(angle)) * -1
 	wallRayCast.cast_to = step_direction * get_direction_scalar()
@@ -150,9 +147,6 @@ func move(dir_key):
 		wallRayCast.force_raycast_update()
 		var new_translation = translation + step_direction * get_direction_scalar()
 		var stairs_pos = get_parent().get_parent().stairs_pos
-		if new_translation.is_equal_approx(stairs_pos * cell_size \
-	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0)):
-			dungeon_entities.battle_ui.ask_for_next_level()
 		dungeon_entities.enemies.update_enemies_steps()
 		if !wallRayCast.is_colliding():
 			
@@ -169,10 +163,6 @@ func move(dir_key):
 							Global.player_room = room
 							emit_signal("player_enter_a_room", room)
 				end_turn(new_translation)
-				dungeon_entities.battle_ui.hide_popup()
-			else:
-				pass
-#				print("enemy is infront player")
 		else:
 			var collider = wallRayCast.get_collider()
 			
@@ -181,7 +171,9 @@ func move(dir_key):
 					collider.open()
 					self.health_pots += collider.health_pots
 					self.mana_pots += collider.mana_pots
-#			print("wall is infront player")
+			elif collider.is_in_group("stairs"):
+				if collider.can_popup:
+					collider.show_next_lvl_dialog()
 
 func play_turn():
 	dungeon_entities.enemies.update_enemies_in_turn()

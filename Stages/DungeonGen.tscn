@@ -6,7 +6,7 @@
 [ext_resource path="res://Entities/Player/Player.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Stages/Entities.gd" type="Script" id=5]
 [ext_resource path="res://Entities/Enemies/EnemiesHandler.gd" type="Script" id=6]
-[ext_resource path="res://Common/fade.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Entities/Stairs.tscn" type="PackedScene" id=7]
 
 [node name="DungeonGen" type="Spatial" groups=[
 "dungeon_generator",
@@ -36,7 +36,8 @@ script = ExtResource( 5 )
 [node name="Enemies" type="Spatial" parent="Entities"]
 script = ExtResource( 6 )
 
-[node name="ColorRect" parent="." instance=ExtResource( 7 )]
+[node name="Stairs" parent="Entities" instance=ExtResource( 7 )]
+[connection signal="chests_ready" from="." to="." method="_on_DungeonGen_chests_ready"]
 [connection signal="enemies_deleted" from="." to="Entities/Enemies" method="_on_DungeonGen_enemies_deleted"]
 [connection signal="enemies_generated" from="." to="Entities/Enemies" method="_on_DungeonGen_enemies_generated"]
 [connection signal="end_turn" from="Entities/Player" to="Entities" method="_on_Player_end_turn"]

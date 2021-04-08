@@ -254,7 +254,7 @@ collision_mask = 16
 collide_with_areas = true
 
 [node name="WeaponPos" type="Position3D" parent="Head/Camera"]
-transform = Transform( 0.707107, -2.98023e-08, -0.707107, 0.534113, 0.655321, 0.534113, 0.463382, -0.75535, 0.463383, 0.55, -1.0391, -0.388678 )
+transform = Transform( 0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0.55, -0.25, -0.9 )
 
 [node name="meleeHitSound" type="AudioStreamPlayer3D" parent="Head/Camera/WeaponPos"]
 stream = ExtResource( 11 )
@@ -322,7 +322,7 @@ collision_mask = 41
 collide_with_areas = true
 
 [node name="debugCamera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 89.945, 0 )
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 100, 0 )
 
 [node name="Tween" type="Tween" parent="."]
 [connection signal="health_reduced" from="Stats" to="Head/Camera/Shaker" method="_on_shake_requested"]

@@ -31,16 +31,11 @@ func _ready():
 	other_wpn.queue_free()
 	wpn.queue_free()
 
-#func _process(delta):
-#	pass
-#	if dungeon_entities.player.animationPlayer.is_playing():
-#		$ChangueWpnBtn.disabled = true
-#	else:
-#		$ChangueWpnBtn.disabled = false
 
 
-func update_lvl_indicator(value):
-	level_indicator.text = "Level:" + str(value)
+
+func update_floor_indicator(value):
+	level_indicator.text = "Floor:" + str(value)
 
 func _on_player_pot_consumed(type, new_amount):
 	if type == "health":
@@ -69,12 +64,6 @@ func _on_player_wpn_changued(old, new):
 
 func set_weapon_icon(wpn):
 	$AttackBtn.icon = wpn.icon
-
-func ask_for_next_level():
-	$ConfirmationDialog.popup()
-
-func hide_popup():
-	$ConfirmationDialog.hide()
 
 
 func _on_AttackBtn_button_down():
