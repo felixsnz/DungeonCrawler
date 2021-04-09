@@ -8,9 +8,6 @@ onready var dialog = $AcceptDialog
 var can_open = true
 var cell_pos
 
-signal actually_ready
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	

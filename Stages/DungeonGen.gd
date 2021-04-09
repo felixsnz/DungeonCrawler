@@ -21,9 +21,9 @@ onready var player = $Entities/Player
 onready var enemies = $Entities/Enemies
 onready var stairs = $Entities/Stairs
 
-signal enemies_generated
 signal enemies_deleted
 signal chests_ready
+signal enemies_generated
 
 var maps
 var obstcle_counter = 0
@@ -83,7 +83,6 @@ func update_stairs_position():
 	+ Vector3(cell_size/2.0, 3.5, cell_size/2.0)
 
 func generate_chests(ind_rooms, percentage):
-	var new_ind_rooms
 	for ind_room in ind_rooms:
 		if randf() > 0.7:
 			var new_room = MapTools.neighbors_map(ind_room, 3)
@@ -98,11 +97,11 @@ func generate_chests(ind_rooms, percentage):
 				entities.call_deferred("add_child", chest)
 				chest.translation = pos
 
-func _process(delta):
+func _process(_delta):
 	var chests_amount = get_tree().get_nodes_in_group("chests").size()
 	if chests_amount == chest_pos.size():
-		var astar = gridMap.astar_node
-		var points = astar.get_points()
+#		var astar = gridMap.astar_node
+#		var points = astar.get_points()
 		for pos in chest_pos:
 			var chest_idx = gridMap.calculate_point_index(pos)
 			gridMap.astar_node.set_point_disabled(chest_idx)

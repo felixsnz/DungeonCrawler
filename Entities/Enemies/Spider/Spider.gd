@@ -92,7 +92,8 @@ func check_raycast():
 		var collider = rayCastAttack.get_collider()
 		var obj = collider.get_parent()
 		$damageSound.play()
-		obj.damage(damage)
+		if obj.script != null:
+			obj.damage(damage)
 
 func end_turn_and_free():
 	end_turn()

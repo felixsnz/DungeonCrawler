@@ -3,6 +3,7 @@ extends Control
 
 const SelecSound = preload("res://Assets/Sounds/8bit-sounds/Select 1.wav")
 const ClickSound = preload("res://Assets/Sounds/8bit-sounds/Confirm 1.wav")
+const game = preload("res://Game.tscn")
 
 onready var streamPlayer = $AudioStreamPlayer
 
@@ -37,8 +38,8 @@ func _on_NewGame_button_down():
 	disable_all()
 	$ColorRect/AnimationPlayer.play("fade_in")
 	yield($ColorRect/AnimationPlayer, "animation_finished")
-# warning-ignore:return_value_discarded
-	get_tree().change_scene("res://Game.tscn")
+	var err = get_tree().change_scene_to(game)
+	print("from menu new game: ", err)
 
 func disable_all():
 	can_focus = false

@@ -35,8 +35,8 @@ func _on_ValueBar_value_changed(value):
 	
 	if value <= 0 and can_end:
 		
-		get_parent().get_parent().get_node("Control").queue_free()
-		dungeon_entities.player.queue_free()
+		get_parent().get_parent().get_node("Control").hide()
+		dungeon_entities.player.script = null
 		get_parent().get_parent().get_node("DeathScreen").popup()
 		can_end = false
 

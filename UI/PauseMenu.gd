@@ -2,6 +2,7 @@ extends Control
 
 
 var notPaused = true
+var menu = load("res://UI/TittleScreen.tscn")
 
 func _ready():
 	show()
@@ -9,7 +10,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_just_pressed("pause"):
 		if notPaused:
 			get_tree().paused = true
@@ -39,8 +40,10 @@ func _on_SettingsBtn_button_down():
 
 
 func _on_MainMenuBtn_button_down():
-	get_tree().change_scene("res://UI/TittleScreen.tscn")
-	pass # Replace with function body.
+# warning-ignore:return_value_discarded
+	Global.player.camera.current = false
+	var err = get_tree().change_scene_to(menu)
+	print("from pause main menu: ", err)
 
 
 func _on_Close_Game_button_down():

@@ -117,6 +117,7 @@ func attack():
 
 func drink_pot(idx):
 	$Head/Camera/PotionPos.get_child(idx).show()
+# warning-ignore:narrowing_conversion
 	$Head/Camera/PotionPos.get_child(abs(int(idx) - 1)).hide()
 	animationPlayer.play_backwards("set_weapon")
 	yield(animationPlayer, "animation_finished")
@@ -146,7 +147,6 @@ func move(dir_key):
 		wallRayCast.cast_to = static_inps[dir_key] * get_direction_scalar()
 		wallRayCast.force_raycast_update()
 		var new_translation = translation + step_direction * get_direction_scalar()
-		var stairs_pos = get_parent().get_parent().stairs_pos
 		dungeon_entities.enemies.update_enemies_steps()
 		if !wallRayCast.is_colliding():
 			
@@ -177,7 +177,8 @@ func move(dir_key):
 
 func play_turn():
 	dungeon_entities.enemies.update_enemies_in_turn()
-	is_on_turn = true
+	if stats.health > 0:
+		is_on_turn = true
 
 
 func stop_walking_check():
@@ -237,7 +238,6 @@ func remove_weapon():
 	return wpn
 
 func damage(amount):
-#	animationPlayer.play("damage_shake")
 	stats.health -= amount
 
 func get_player_direction():

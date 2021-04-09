@@ -41,7 +41,6 @@ mouse_filter = 2
 custom_fonts/title_font = SubResource( 1 )
 
 [node name="DeathScreen" parent="." instance=ExtResource( 4 )]
-visible = false
 mouse_filter = 1
 
 [node name="Instructions" type="Control" parent="."]

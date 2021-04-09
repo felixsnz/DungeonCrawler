@@ -17,6 +17,7 @@ func _ready():
 	
 	dungeon_entities.enemies = self
 	var player = dungeon_entities.player
+# warning-ignore:return_value_discarded
 	self.connect("enemies_steps_list_filled", player, "get_enemies_steps")
 
 

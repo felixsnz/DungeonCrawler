@@ -28,7 +28,8 @@ func _on_Enemies_end_turn():
 		var battle_ui = dungeon_entities.battle_ui
 		if battle_ui != null:
 			dungeon_entities.battle_ui.disable(false)
-		player.play_turn()
+		if player.script != null:
+			player.play_turn()
 #		yield(player, "end_turn")
 #		start_enemies_turn()
 

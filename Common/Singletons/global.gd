@@ -11,6 +11,5 @@ var ind_rooms = null
 var _floor = 1 setget set_floor
 
 func set_floor(value):
-	if dungeon_entities.battle_ui != null:
-		dungeon_entities.battle_ui.update_floor_indicator(value)
+	dungeon_entities.battle_ui.update_floor_indicator(value)
 	_floor = value
